@@ -4,7 +4,6 @@
  */
 package hierachical_code;
 
-
 /**
  *
  * @author pham0071
@@ -123,7 +122,15 @@ public class hierachical_code {
         this.o1o2o3o4 = o1o2o3o4;
     }
 
-    public void Encode(byte[] data) {
+    private byte[] xor(byte[] op1, byte[] op2) {
+        byte[] result = new byte[op1.length];
+        for (int i = 0; i < op1.length; i++) {
+            result[i] = (byte) (op1[i] ^ op2[i]);
+        }
+        return result;
+    }
+
+    public void encode(byte[] data) {
         if (data.length % 4 != 0) {
             int new_length = (int) (Math.ceil(data.length / (float) 4) * 4);
             byte[] _data = new byte[new_length];
@@ -140,17 +147,86 @@ public class hierachical_code {
 
         System.arraycopy(data, 0, o1, 0, code_size);
         System.arraycopy(data, code_size, o2, 0, code_size);
-        System.arraycopy(data, 2*code_size, o3, 0, code_size);
-        System.arraycopy(data, 3*code_size, o4, 0, code_size);
-        
-        o1o2 = new byte[code_size];
-        o3o4 = new byte[code_size];
-        o1o2o3o4 = new byte[code_size];
+        System.arraycopy(data, 2 * code_size, o3, 0, code_size);
+        System.arraycopy(data, 3 * code_size, o4, 0, code_size);
 
-        for (int i = 0; i < code_size; i++) {
-            o1o2[i] = (byte) (o1[i] ^ o2[i]);
-            o3o4[i] = (byte) (o3[i] ^ o4[i]);
-            o1o2o3o4[i] = (byte) (o1o2[i] ^ o3o4[i]);
+//        o1o2 = new byte[code_size];
+//        o3o4 = new byte[code_size];
+//        o1o2o3o4 = new byte[code_size];
+
+        o1o2 = xor(o1, o2);
+        o3o4 = xor(o3, o4);
+        o1o2o3o4 = xor(o1o2, o3o4);
+
+    }
+
+    private byte[] recover_data(byte[] full_data, byte[] data11, byte[] data12, byte[] data2) {
+
+        if (data11 == null && data12 != null && data2 != null) {
+            data11 = xor(data12, data2);
         }
+
+        return xor(full_data, data11);
+
+    }
+
+    public byte[] decode() {
+        if ((o1 == null && o2 == null) || (o3 == null && o4 == null)) {
+            return null;
+        }
+
+        byte[] lost_data = null;
+        byte[] full_data = null;
+        byte[] data11 = null;
+        byte[] data12 = null;
+        byte[] data2 = o1o2o3o4;
+
+        if (o1 == null || o2 == null) {
+            if (o1 == null) {
+                //lost_data = o1;
+                full_data = o2;
+                data11 = o1o2;
+                data12 = o3o4;
+                o1 = recover_data(full_data, data11, data12, data2);
+
+            }
+            if (o2 == null) {
+                lost_data = o2;
+                full_data = o1;
+                data11 = o1o2;
+                data12 = o3o4;
+                o2 = recover_data(full_data, data11, data12, data2);
+            }
+            
+        }
+
+        if (o3 == null || o4 == null) {
+            if (o3 == null) {
+                lost_data = o3;
+                full_data = o4;
+                data11 = o3o4;
+                data12 = o1o2;
+                o3 = recover_data(full_data, data11, data12, data2);
+            }
+            if (o4 == null) {
+                lost_data = o4;
+                full_data = o3;
+                data11 = o3o4;
+                data12 = o1o2;
+                o4 = recover_data(full_data, data11, data12, data2);
+            }
+            
+        }
+
+
+        int code_size = o1.length;
+        byte[] result = new byte[4 * code_size];
+
+        System.arraycopy(o1, 0, result, 0, code_size);
+        System.arraycopy(o2, 0, result, code_size, code_size);
+        System.arraycopy(o3, 0, result, 2 * code_size, code_size);
+        System.arraycopy(o4, 0, result, 3 * code_size, code_size);
+
+        return result;
     }
 }
