@@ -4,13 +4,11 @@
  */
 package ce7490_client;
 
-import hierachical_code.*;
 import client_master_interface.*;
 import client_slave_interface.*;
-
+import hierachical_code.*;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,11 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.rmi.RemoteException;
-
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.HashMap;
-
 import java.util.Map;
 
 /**
@@ -47,7 +43,7 @@ public class Client {
             return list_slaves;
 	} catch (RemoteException e) {
 	    System.err.println("Remote exception: " + e.toString());
-	    e.printStackTrace();
+	    //e.printStackTrace();
             throw e;
 	} catch (Exception e) {
 //	    System.err.println("Client exception: " + e.toString());
@@ -67,7 +63,7 @@ public class Client {
             return list_slaves;
 	} catch (RemoteException e) {
 	    System.err.println("Remote exception: " + e.toString());
-	    e.printStackTrace();
+	    //e.printStackTrace();
             throw e;
 	} catch (Exception e) {
 //	    System.err.println("Client exception: " + e.toString());
@@ -87,12 +83,12 @@ public class Client {
             
         } catch (RemoteException e) {
             System.err.println("Remote exception: " + e.toString());
-            e.printStackTrace();
-            throw e;
+            //e.printStackTrace();
+            //throw e;
         } catch (Exception e) {
 //	    System.err.println("Client exception: " + e.toString());
 //	    e.printStackTrace();
-            throw e;
+            //throw e;
         }
     }
     
@@ -108,7 +104,7 @@ public class Client {
             
         } catch (RemoteException e) {
             System.err.println("Remote exception: " + e.toString());
-            e.printStackTrace();
+            //e.printStackTrace();
             throw e;
         } catch (Exception e) {
 //	    System.err.println("Client exception: " + e.toString());
@@ -172,10 +168,13 @@ public class Client {
     public static void write_operation(String filename) throws Exception {
         
         byte[] data = read_file(filename);
-        
-        Writing_request_result list_slaves = 
-                get_writing_slaves(filename, data.length);
-        
+        Writing_request_result list_slaves;
+        try {
+            list_slaves =
+                    get_writing_slaves(filename, data.length);
+        } catch (Exception e) {
+            return;
+        }
         hierachical_code encoder = new hierachical_code();
         encoder.encode(data);
         
@@ -183,7 +182,13 @@ public class Client {
     }
     
     public static byte[] read_operation(String filename) throws Exception{
-        Reading_request_result metadata = get_reading_slaves(filename);
+        Reading_request_result metadata;
+        try {
+            metadata = get_reading_slaves(filename);
+        } catch (Exception e)
+        {
+            return null;
+        }
         
         byte[] o1 = null;
         byte[] o2 = null;
@@ -250,7 +255,7 @@ public class Client {
         
         byte[] result_data = decoder.decode();
         if (result_data != null){
-            byte[] original_data = null;
+            byte[] original_data;
             if (result_data.length > metadata.file_size) {
                 original_data = new byte[metadata.file_size];
                 System.arraycopy(result_data, 0, original_data, 0, metadata.file_size);
@@ -305,12 +310,8 @@ public class Client {
     public static void write(byte[] aInput, String aOutputFileName) {
         //log("Writing binary file...");
         try {
-            OutputStream output = null;
-            try {
-                output = new BufferedOutputStream(new FileOutputStream(aOutputFileName));
+            try (OutputStream output = new BufferedOutputStream(new FileOutputStream(aOutputFileName))) {
                 output.write(aInput);
-            } finally {
-                output.close();
             }
         } catch (FileNotFoundException ex) {
             //log("File not found.");
