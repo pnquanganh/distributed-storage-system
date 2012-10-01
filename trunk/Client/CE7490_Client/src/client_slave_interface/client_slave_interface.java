@@ -11,5 +11,6 @@ import java.rmi.RemoteException;
  * @author pham0071
  */
 public interface client_slave_interface extends Remote {
-    
+    byte[] read_data(String filename) throws RemoteException;
+    void write_data(String filename, byte[] data) throws RemoteException;
 }
