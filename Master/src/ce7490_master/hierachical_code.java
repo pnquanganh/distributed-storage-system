@@ -8,25 +8,137 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
 
-import client_master_interface.*;
-
 public class hierachical_code {
-	public static HashMap<Integer, HashSet<Integer>> recovery (Vector<Integer> missing){
-		HashMap<Integer, HashSet<Integer>> recovered = new HashMap<Integer, HashSet<Integer>>();
+	public static HashMap<Hierachical_codes, HashSet<Hierachical_codes>> recovery (Vector<Hierachical_codes> missing){
+		HashMap<Hierachical_codes, HashSet<Hierachical_codes>> recovered = new HashMap<Hierachical_codes, HashSet<Hierachical_codes>>();
 		
-		
-		for (int i = 0; i<7; i++){
-			if (! missing.contains(i)){
-				HashSet<Integer> recMethod = new HashSet<Integer>();
-				recMethod.add(i);
-				recovered.put(i, recMethod);
+		for (Hierachical_codes i: Hierachical_codes.values()){
+			if (!missing.contains(i)){
+				HashSet<Hierachical_codes> temp = new HashSet<Hierachical_codes>();
+				temp.add(i);
+				recovered.put(i, temp);
 			}
 		}
 		
-		for (int i = 0; i<missing.size(); i++)
-		{
-			int missed = missing.get(i);
-			HashSet<Integer> a = recovered.get(key);
+		HashSet<Hierachical_codes> a;
+		HashSet<Hierachical_codes> b;
+		
+		if (missing.contains(Hierachical_codes.O1O2)){
+			a = recovered.get(Hierachical_codes.O1);
+			b = recovered.get(Hierachical_codes.O2);
+			
+			if (a!=null && b!= null){
+				HashSet<Hierachical_codes> temp = new HashSet<Hierachical_codes>();
+				temp.addAll(a);
+				temp.addAll(b);
+				
+				recovered.put(Hierachical_codes.O1O2, temp);
+				missing.remove(Hierachical_codes.O1O2);
+			}
+		}
+		if (missing.contains(Hierachical_codes.O3O4)){
+			a = recovered.get(Hierachical_codes.O3);
+			b = recovered.get(Hierachical_codes.O4);
+			
+			if (a!=null && b!= null){
+				HashSet<Hierachical_codes> temp = new HashSet<Hierachical_codes>();
+				temp.addAll(a);
+				temp.addAll(b);
+				
+				recovered.put(Hierachical_codes.O3O4, temp);
+				missing.remove(Hierachical_codes.O3O4);
+			}
+		}
+		if (missing.contains(Hierachical_codes.O1O2O3O4)){
+			a = recovered.get(Hierachical_codes.O1O2);
+			b = recovered.get(Hierachical_codes.O3O4);
+			
+			if (a!=null && b!= null){
+				HashSet<Hierachical_codes> temp = new HashSet<Hierachical_codes>();
+				temp.addAll(a);
+				temp.addAll(b);
+				
+				recovered.put(Hierachical_codes.O1O2O3O4, temp);
+				missing.remove(Hierachical_codes.O1O2O3O4);
+			}
+		}
+		if (missing.contains(Hierachical_codes.O1O2)){
+			a = recovered.get(Hierachical_codes.O1O2O3O4);
+			b = recovered.get(Hierachical_codes.O3O4);
+			
+			if (a!=null && b!= null){
+				HashSet<Hierachical_codes> temp = new HashSet<Hierachical_codes>();
+				temp.addAll(a);
+				temp.addAll(b);
+				
+				recovered.put(Hierachical_codes.O1O2, temp);
+				missing.remove(Hierachical_codes.O1O2);
+			}
+		}
+		if (missing.contains(Hierachical_codes.O3O4)){
+			a = recovered.get(Hierachical_codes.O1O2O3O4);
+			b = recovered.get(Hierachical_codes.O1O2);
+			
+			if (a!=null && b!= null){
+				HashSet<Hierachical_codes> temp = new HashSet<Hierachical_codes>();
+				temp.addAll(a);
+				temp.addAll(b);
+				
+				recovered.put(Hierachical_codes.O3O4, temp);
+				missing.remove(Hierachical_codes.O3O4);
+			}
+		}
+		if (missing.contains(Hierachical_codes.O1)){
+			a = recovered.get(Hierachical_codes.O1O2);
+			b = recovered.get(Hierachical_codes.O2);
+			
+			if (a!=null && b!= null){
+				HashSet<Hierachical_codes> temp = new HashSet<Hierachical_codes>();
+				temp.addAll(a);
+				temp.addAll(b);
+				
+				recovered.put(Hierachical_codes.O1, temp);
+				missing.remove(Hierachical_codes.O1);
+			}
+		}
+		if (missing.contains(Hierachical_codes.O2)){
+			a = recovered.get(Hierachical_codes.O1O2);
+			b = recovered.get(Hierachical_codes.O1);
+			
+			if (a!=null && b!= null){
+				HashSet<Hierachical_codes> temp = new HashSet<Hierachical_codes>();
+				temp.addAll(a);
+				temp.addAll(b);
+				
+				recovered.put(Hierachical_codes.O2, temp);
+				missing.remove(Hierachical_codes.O2);
+			}
+		}
+		if (missing.contains(Hierachical_codes.O3)){
+			a = recovered.get(Hierachical_codes.O3O4);
+			b = recovered.get(Hierachical_codes.O4);
+			
+			if (a!=null && b!= null){
+				HashSet<Hierachical_codes> temp = new HashSet<Hierachical_codes>();
+				temp.addAll(a);
+				temp.addAll(b);
+				
+				recovered.put(Hierachical_codes.O3, temp);
+				missing.remove(Hierachical_codes.O3);
+			}
+		}
+		if (missing.contains(Hierachical_codes.O4)){
+			a = recovered.get(Hierachical_codes.O3O4);
+			b = recovered.get(Hierachical_codes.O3);
+			
+			if (a!=null && b!= null){
+				HashSet<Hierachical_codes> temp = new HashSet<Hierachical_codes>();
+				temp.addAll(a);
+				temp.addAll(b);
+				
+				recovered.put(Hierachical_codes.O4, temp);
+				missing.remove(Hierachical_codes.O4);
+			}
 		}
 		
 		return recovered;
