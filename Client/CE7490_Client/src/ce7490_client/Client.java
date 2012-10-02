@@ -117,9 +117,9 @@ public class Client {
             Writing_request_result list_slaves,
             hierachical_code encoded_data) throws Exception{
         
-        for (Map.Entry<Hierachical_codes, slave_info> entry : list_slaves.slaves.entrySet()) {
+        for (Map.Entry<Hierachical_codes, Info> entry : list_slaves.slaves.entrySet()) {
             Hierachical_codes code = entry.getKey();
-            slave_info slave = entry.getValue();
+            Info slave = entry.getValue();
             
             byte[] data_to_write;
             String fname = filename;
@@ -165,7 +165,7 @@ public class Client {
             Reading_request_result list_slaves,
             Hierachical_codes code) throws Exception {
         try {
-            slave_info slave = list_slaves.slaves.get(code);
+            Info slave = list_slaves.slaves.get(code);
             return read_data(filename, slave.getHost(), slave.getPort(), slave.getName());
         } catch (Exception e) {
             return null;
@@ -206,7 +206,7 @@ public class Client {
         byte[] o3o4 = null;
         byte[] o1o2o3o4 = null;
         
-        HashMap<Hierachical_codes, slave_info> slaves = metadata.slaves;
+        HashMap<Hierachical_codes, Info> slaves = metadata.slaves;
         
         if ((!slaves.containsKey(Hierachical_codes.O1) && !slaves.containsKey(Hierachical_codes.O2)) ||
                 (!slaves.containsKey(Hierachical_codes.O3) && !slaves.containsKey(Hierachical_codes.O4))){
