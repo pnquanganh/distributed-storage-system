@@ -12,6 +12,6 @@ import java.util.HashMap;
  */
 public class Reading_request_result {
 
-    public HashMap<Hierachical_codes, slave_info> slaves;
+    public HashMap<Hierachical_codes, Info> slaves;
     public int file_size;
 }

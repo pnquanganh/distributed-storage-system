@@ -11,5 +11,5 @@ import java.util.HashMap;
  * @author pham0071
  */
 public class Writing_request_result {
-    public HashMap<Hierachical_codes, slave_info> slaves;
+    public HashMap<Hierachical_codes, Info> slaves;
 }
