@@ -156,7 +156,7 @@ public class Client {
                     throw new AssertionError();
             }
             
-            write_data(filename, data_to_write, slave.getHost(), slave.getPort(), 
+            write_data(fname, data_to_write, slave.getHost(), slave.getPort(), 
                     slave.getName());
         }
     }
