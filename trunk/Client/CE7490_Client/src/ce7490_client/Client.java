@@ -122,27 +122,35 @@ public class Client {
             slave_info slave = entry.getValue();
             
             byte[] data_to_write;
+            String fname = filename;
             switch (code) {
                 case O1:
                     data_to_write = encoded_data.getO1();
+                    fname += ".O1";
                     break;
                 case O2:
                     data_to_write = encoded_data.getO2();
+                    fname += ".O2";
                     break;
                 case O3:
                     data_to_write = encoded_data.getO3();
+                    fname += ".O3";
                     break;
                 case O4:
                     data_to_write = encoded_data.getO4();
+                    fname += ".O4";
                     break;
                 case O1O2:
                     data_to_write = encoded_data.getO1O2();
+                    fname += ".O1O2";
                     break;
                 case O3O4:
                     data_to_write = encoded_data.getO3O4();
+                    fname += ".O3O4";
                     break;
                 case O1O2O3O4:
                     data_to_write = encoded_data.getO1O2O3O4();
+                    fname += ".O1O2O3O4";
                     break;
                 default:
                     throw new AssertionError();
@@ -208,38 +216,38 @@ public class Client {
         hierachical_code decoder = new hierachical_code();
         
         if (slaves.containsKey(Hierachical_codes.O1)) {
-            o1 = read_from_slave(filename, metadata, Hierachical_codes.O1);
+            o1 = read_from_slave(filename + ".O1", metadata, Hierachical_codes.O1);
         }
         if (slaves.containsKey(Hierachical_codes.O2)) {
-            o2 = read_from_slave(filename, metadata, Hierachical_codes.O2);
+            o2 = read_from_slave(filename + ".O2", metadata, Hierachical_codes.O2);
         }
         if (slaves.containsKey(Hierachical_codes.O3)) {
-            o3 = read_from_slave(filename, metadata, Hierachical_codes.O3);
+            o3 = read_from_slave(filename + ".O3", metadata, Hierachical_codes.O3);
         }
         if (slaves.containsKey(Hierachical_codes.O4)) {
-            o4 = read_from_slave(filename, metadata, Hierachical_codes.O4);
+            o4 = read_from_slave(filename + ".O4", metadata, Hierachical_codes.O4);
         }
             
         if (o1 == null || o2 == null || o3 == null || o4 == null) {
 
             if (o1 == null || o2 == null) {
                 if (slaves.containsKey(Hierachical_codes.O1O2)) {
-                    o1o2 = read_from_slave(filename, metadata, Hierachical_codes.O1O2);
+                    o1o2 = read_from_slave(filename + ".O1O2", metadata, Hierachical_codes.O1O2);
                 } else {
-                    o3o4 = read_from_slave(filename, metadata, Hierachical_codes.O3O4);
-                    o1o2o3o4 = read_from_slave(filename, metadata, Hierachical_codes.O1O2O3O4);
+                    o3o4 = read_from_slave(filename + ".O3O4", metadata, Hierachical_codes.O3O4);
+                    o1o2o3o4 = read_from_slave(filename + ".O1O2O3O4", metadata, Hierachical_codes.O1O2O3O4);
                 }
             }
 
             if (o3 == null || o4 == null) {
                 if (slaves.containsKey(Hierachical_codes.O3O4) && o3o4 == null) {
-                    o3o4 = read_from_slave(filename, metadata, Hierachical_codes.O3O4);
+                    o3o4 = read_from_slave(filename + ".O3O4", metadata, Hierachical_codes.O3O4);
                 } else {
                     if (o1o2 == null) {
-                        o1o2 = read_from_slave(filename, metadata, Hierachical_codes.O1O2);
+                        o1o2 = read_from_slave(filename + ".O1O2", metadata, Hierachical_codes.O1O2);
                     }
                     if (o1o2o3o4 == null) {
-                        o1o2o3o4 = read_from_slave(filename, metadata, Hierachical_codes.O1O2O3O4);
+                        o1o2o3o4 = read_from_slave(filename + ".O1O2O3O4", metadata, Hierachical_codes.O1O2O3O4);
                     }
                 }
             }
