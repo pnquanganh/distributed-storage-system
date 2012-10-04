@@ -32,7 +32,7 @@ public class Slave_HeartBeat extends Thread {
 				slave_master_interface writer = (slave_master_interface) registry
 						.lookup(master.getName());
 				writer.slave_heartbeat(slave_info);
-				Thread.sleep(1000 * 120);
+				Thread.sleep(1000 * 5);
 			} catch (RemoteException e) {
 				System.err.println("Remote exception: " + e.toString());
 			} catch (NotBoundException e) {
