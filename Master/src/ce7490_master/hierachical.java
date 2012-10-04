@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
 
+import Info.Hierachical_codes;
+
 public class hierachical {
 	public static HashMap<Hierachical_codes, HashSet<Hierachical_codes>> recovery (Vector<Hierachical_codes> missing){
 		HashMap<Hierachical_codes, HashSet<Hierachical_codes>> recovered = new HashMap<Hierachical_codes, HashSet<Hierachical_codes>>();

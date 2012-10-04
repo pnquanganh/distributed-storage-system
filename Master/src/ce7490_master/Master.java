@@ -4,16 +4,24 @@ import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Vector;
 
+import Info.Hierachical_codes;
+import Info.Info;
+
 import slave_master_interface.*;
 import master_slave_interface.*;
 import client_master_interface.*;
 
-public class Master implements client_master_interface, slave_master_interface {
+public class Master extends UnicastRemoteObject implements client_master_interface, slave_master_interface {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static HashMap<String, Reading_request_result> files;
 	public static HashMap<Info, HashSet<String>> slaves;
 	public static HashMap<Info, Long> timeStamps;
@@ -31,8 +39,8 @@ public class Master implements client_master_interface, slave_master_interface {
 	public Master() throws RemoteException {
 		try {
 			Registry registry = LocateRegistry.createRegistry(2055);
-			registry.bind("Master", this);
-
+			registry.rebind("Master", this);
+			
 			System.err.println("Master ready");
 			System.err.println(InetAddress.getLocalHost().toString() + ":2055");
 		} catch (Exception e) {
@@ -41,11 +49,12 @@ public class Master implements client_master_interface, slave_master_interface {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws RemoteException {
 		files = new HashMap<String, Reading_request_result>();
 		slaves = new HashMap<Info, HashSet<String>>();
 		deadSlaves = new HashSet<Info>();
 		rand = new Random(System.currentTimeMillis());
+		timeStamps = new HashMap<Info, Long>();
 
 		try {
 			new Master();
@@ -55,6 +64,7 @@ public class Master implements client_master_interface, slave_master_interface {
 		}
 
 		(new TimeThread()).start();
+		//Info newinf = new Info();
 	}
 
 	public static void recovery() throws Exception {
@@ -179,11 +189,14 @@ public class Master implements client_master_interface, slave_master_interface {
 	@Override
 	public boolean slave_join_dfs(Info info) throws RemoteException {
 		// TODO Auto-generated method stub
-
+		
 		slaves.put(info, new HashSet<String>());
 		System.out.println(info.getHost() + " joins in!");
 
 		timeStamps.put(info, (Long) (System.currentTimeMillis() / 1000));
+		
+		
+		//System.out.println(string);
 
 		return true;
 	}
@@ -195,7 +208,7 @@ public class Master implements client_master_interface, slave_master_interface {
 		// System.out.println(currentTime);
 
 		for (Info i : slaves.keySet()) {
-			if (currentTime - timeStamps.get(i) > 20)
+			if (currentTime - timeStamps.get(i) > 240)
 				deadSlaves.add(i);
 		}
 

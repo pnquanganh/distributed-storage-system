@@ -2,14 +2,24 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ce7490_master;
+package Info;
+
+
 
 /**
  *
  * @author pham0071
  */
-public class Info {
-    private String _host;
+public class Info implements java.io.Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+
+	private String _host;
     private int _port;
     private String _name;
 
