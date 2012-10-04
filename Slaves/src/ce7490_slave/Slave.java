@@ -14,6 +14,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -24,7 +25,11 @@ import master_slave_interface.master_slave_interface;
 import slave_master_interface.slave_master_interface;
 import client_slave_interface.client_slave_interface;
 
-public class Slave implements client_slave_interface, master_slave_interface {
+public class Slave extends UnicastRemoteObject implements client_slave_interface, master_slave_interface {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Registry registry;
 	private Info master_info = new Info();
 	private Info slave_info = new Info();
@@ -41,13 +46,14 @@ public class Slave implements client_slave_interface, master_slave_interface {
 				master_info.getHost(), master_info.getPort());
 		boolean join_system = false;
 		try {
-			slave_info.setHost((InetAddress.getLocalHost()).toString());
+			slave_info.setHost((InetAddress.getLocalHost()).getHostAddress());
 		} catch (Exception e) {
 			System.out.println("can't get inet address.");
 		}
 
 		int port = 5355;
 		slave_info.setPort(port);
+		slave_info.setName("SlaveServer");
 		System.out.println("this address=" + slave_info.getHost() + ",port="
 				+ slave_info.getPort());
 		try {
@@ -57,7 +63,6 @@ public class Slave implements client_slave_interface, master_slave_interface {
 		} catch (RemoteException e) {
 			System.out.println("remote exception" + e);
 		}
-		slave_info.setName("SlaveServer");
 		while (!join_system) {
 			try {
 				slave_master_interface smi = (slave_master_interface) master_registry
@@ -87,6 +92,7 @@ public class Slave implements client_slave_interface, master_slave_interface {
 
 	@Override
 	public byte[] read_data(String filename) throws RemoteException {
+		System.out.println("reading data from:"+filename);
 		File file = new File(filename);
 		try {
 
@@ -136,11 +142,14 @@ public class Slave implements client_slave_interface, master_slave_interface {
 	@Override
 	public void write_data(String filename, byte[] data) throws RemoteException {
 		BufferedOutputStream bfoutput = null;
+		System.out.println("writing data to :"+filename);
 		try {
 			FileOutputStream fileoutput = new FileOutputStream(new File(
 					filename));
 			bfoutput = new BufferedOutputStream(fileoutput);
 			bfoutput.write(data);
+			bfoutput.flush();
+			bfoutput.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -154,7 +163,7 @@ public class Slave implements client_slave_interface, master_slave_interface {
 			throws RemoteException {
 
 		try {
-			Registry registry = LocateRegistry.getRegistry(slave_hostname);
+			Registry registry = LocateRegistry.getRegistry(slave_hostname, slave_port);
 			client_slave_interface writer = (client_slave_interface) registry
 					.lookup(slave_name);
 			return writer.read_data(filename);
@@ -216,7 +225,7 @@ public class Slave implements client_slave_interface, master_slave_interface {
 			Slave slave = new Slave();
 			Thread heartbeat_thread = new Slave_HeartBeat(
 					slave.get_Slave_Info());
-			// heartbeat_thread.start();
+			heartbeat_thread.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
