@@ -9,10 +9,15 @@ import java.util.HashMap;
 import Info.Hierachical_codes;
 import Info.Info;
 
+
 /**
  *
  * @author pham0071
  */
-public class Writing_request_result {
-    public HashMap<Hierachical_codes, Info> slaves;
+public class Writing_request_result implements java.io.Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public HashMap<Hierachical_codes, Info> slaves;
 }

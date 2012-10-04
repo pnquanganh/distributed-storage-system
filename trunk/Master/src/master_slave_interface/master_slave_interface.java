@@ -4,7 +4,9 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 
-import ce7490_master.*;
+import Info.Hierachical_codes;
+import Info.Info;
+
 
 /**
  *
