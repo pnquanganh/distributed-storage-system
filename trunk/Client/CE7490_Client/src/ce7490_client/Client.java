@@ -335,39 +335,44 @@ public class Client {
         // TODO code application logic here
         String filename = "C:\\Users\\pham0071\\Downloads\\3 Constraints.pptx";
         
-        byte[] data = read_file(filename);
-        hierachical_code encoder = new hierachical_code();
-        encoder.encode(data);
+        try {
+            read_operation(filename);
+        } catch (Exception e) {
+        }
         
-        hierachical_code decoder = new hierachical_code();
-        decoder.setO2(encoder.getO2());
-        decoder.setO3(encoder.getO3());
-        decoder.setO4(encoder.getO4());
-        //decoder.setO1O2(encoder.getO1O2());
-        decoder.setO3O4(encoder.getO3O4());
-        decoder.setO1O2O3O4(encoder.getO1O2O3O4());
-
-        byte[] tmp = decoder.decode();
-        byte[] original_data = null;
-        if (tmp.length > data.length){
-            original_data = new byte[data.length];
-            System.arraycopy(tmp, 0, original_data, 0, data.length);
-        }
-        else{
-            original_data = tmp;
-        }
-
-//        byte[] o2 = encoder.getO2();
-//        byte[] new_o2 = decoder.getO2();
+//        byte[] data = read_file(filename);
+//        hierachical_code encoder = new hierachical_code();
+//        encoder.encode(data);
 //        
-//        System.out.println(new_o2.length);
-//        for (int i = 0; i < new_o2.length; i++) {
-//            if (o2[i] != new_o2[i]){
-//                System.out.println(i + " " + o2[i] + " " + new_o2[i]);
-//            }
-//                
-//            
+//        hierachical_code decoder = new hierachical_code();
+//        decoder.setO2(encoder.getO2());
+//        decoder.setO3(encoder.getO3());
+//        decoder.setO4(encoder.getO4());
+//        //decoder.setO1O2(encoder.getO1O2());
+//        decoder.setO3O4(encoder.getO3O4());
+//        decoder.setO1O2O3O4(encoder.getO1O2O3O4());
+//
+//        byte[] tmp = decoder.decode();
+//        byte[] original_data = null;
+//        if (tmp.length > data.length){
+//            original_data = new byte[data.length];
+//            System.arraycopy(tmp, 0, original_data, 0, data.length);
 //        }
-        write(original_data, "test.pptx");
+//        else{
+//            original_data = tmp;
+//        }
+//
+////        byte[] o2 = encoder.getO2();
+////        byte[] new_o2 = decoder.getO2();
+////        
+////        System.out.println(new_o2.length);
+////        for (int i = 0; i < new_o2.length; i++) {
+////            if (o2[i] != new_o2[i]){
+////                System.out.println(i + " " + o2[i] + " " + new_o2[i]);
+////            }
+////                
+////            
+////        }
+//        write(original_data, "test.pptx");
     }
 }

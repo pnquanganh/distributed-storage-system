@@ -6,12 +6,11 @@ package client_master_interface;
 
 import java.util.HashMap;
 
-/**
- *
- * @author pham0071
- */
-public class Reading_request_result {
-
-    public HashMap<Hierachical_codes, Info> slaves;
+public class Reading_request_result implements java.io.Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public HashMap<Hierachical_codes, Info> slaves;
     public int file_size;
 }
