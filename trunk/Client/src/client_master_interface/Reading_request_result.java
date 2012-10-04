@@ -6,6 +6,9 @@ package client_master_interface;
 
 import java.util.HashMap;
 
+import Info.Hierachical_codes;
+import Info.Info;
+
 public class Reading_request_result implements java.io.Serializable{
     /**
 	 * 
