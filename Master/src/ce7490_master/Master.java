@@ -97,6 +97,8 @@ public class Master extends UnicastRemoteObject implements
 					.recovery(missing);
 
 			if (missing.size() > 0) {
+				
+				System.out.println(dFile+" has been lost due to slave failure!");
 				files.remove(dFile);
 				// can not recover: data block lost
 			} else {
@@ -121,6 +123,8 @@ public class Master extends UnicastRemoteObject implements
 						recoveryToSlave(newSlave, dFile, i, parts);
 					}
 				}
+				
+				System.out.println(dFile+" has been recovered!");
 			}
 
 		}
@@ -131,6 +135,16 @@ public class Master extends UnicastRemoteObject implements
 	private static void recoveryToSlave(Info newSlave, String dFile,
 			Hierachical_codes i, HashMap<Hierachical_codes, Info> parts)
 			throws Exception {
+		
+		System.out.println("Recovering ***********");
+		System.out.println(newSlave.getHost()+":"+newSlave.getPort()+" "+i+" ");
+		
+		for (Hierachical_codes ri : parts.keySet()){
+			System.out.println(parts.get(ri).getHost()+":"+parts.get(ri).getPort()+" "+ri+" ");
+		}
+		System.out.println("*********************");
+		
+		
 		try {
 			Registry registry = LocateRegistry.getRegistry(newSlave.getHost(),
 					newSlave.getPort());
@@ -196,7 +210,7 @@ public class Master extends UnicastRemoteObject implements
 		// TODO Auto-generated method stub
 
 		slaves.put(info, new HashSet<String>());
-		System.out.println(info.getHost() + " joins in!");
+		System.out.println(info.getHost()+":"+ info.getPort() + " joins in!");
 
 		timeStamps.put(info, (Long) (System.currentTimeMillis() / 1000));
 
@@ -230,7 +244,7 @@ public class Master extends UnicastRemoteObject implements
 		
 		if (slaves.containsKey(info)) {
 			timeStamps.put(info, (Long) (System.currentTimeMillis() / 1000));
-			System.out.println(info.getHost() + " heartbeating...");
+			System.out.println(info.getHost()+":" +info.getPort()+ " heartbeating...");
 		}
 	}
 
