@@ -11,7 +11,7 @@ public class TimeThread extends Thread {
 			}
 
 			try {
-				Master.check();
+				//Master.check();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
