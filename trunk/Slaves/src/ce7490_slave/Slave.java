@@ -25,7 +25,8 @@ import master_slave_interface.master_slave_interface;
 import slave_master_interface.slave_master_interface;
 import client_slave_interface.client_slave_interface;
 
-public class Slave extends UnicastRemoteObject implements client_slave_interface, master_slave_interface {
+public class Slave extends UnicastRemoteObject implements
+		client_slave_interface, master_slave_interface {
 	/**
 	 * 
 	 */
@@ -51,7 +52,7 @@ public class Slave extends UnicastRemoteObject implements client_slave_interface
 			System.out.println("can't get inet address.");
 		}
 
-		int port = 5355;
+		int port = 5354;
 		slave_info.setPort(port);
 		slave_info.setName("SlaveServer");
 		System.out.println("this address=" + slave_info.getHost() + ",port="
@@ -92,7 +93,7 @@ public class Slave extends UnicastRemoteObject implements client_slave_interface
 
 	@Override
 	public byte[] read_data(String filename) throws RemoteException {
-		System.out.println("reading data from:"+filename);
+		System.out.println("reading data from:" + filename);
 		File file = new File(filename);
 		try {
 
@@ -142,7 +143,7 @@ public class Slave extends UnicastRemoteObject implements client_slave_interface
 	@Override
 	public void write_data(String filename, byte[] data) throws RemoteException {
 		BufferedOutputStream bfoutput = null;
-		System.out.println("writing data to :"+filename);
+		System.out.println("writing data to :" + filename);
 		try {
 			FileOutputStream fileoutput = new FileOutputStream(new File(
 					filename));
@@ -163,7 +164,8 @@ public class Slave extends UnicastRemoteObject implements client_slave_interface
 			throws RemoteException {
 
 		try {
-			Registry registry = LocateRegistry.getRegistry(slave_hostname, slave_port);
+			Registry registry = LocateRegistry.getRegistry(slave_hostname,
+					slave_port);
 			client_slave_interface writer = (client_slave_interface) registry
 					.lookup(slave_name);
 			return writer.read_data(filename);
@@ -189,32 +191,22 @@ public class Slave extends UnicastRemoteObject implements client_slave_interface
 	public void recoverBlock(String filename, Hierachical_codes recoverd,
 			HashMap<Hierachical_codes, Info> parts) throws RemoteException {
 
-		Iterator<Hierachical_codes> keys = parts.keySet().iterator();
-		Iterator<Info> values = parts.values().iterator();
 		int size = parts.size();
-		byte[][] recdata = new byte[size][];
 		byte[] result = null;
 		byte[] tmp = null;
-
-		for (int i = 0; keys.hasNext() && values.hasNext(); i++) {
-			Hierachical_codes hcode = keys.next();
-			Info info = values.next();
-			try {
-				recdata[i] = read_data_for_recovery(filename + hcode,
-						info.getHost(), info.getPort(), info.getName());
-				if (i == 0)
-					result = recdata[i];
-				else
-					result = xor(tmp, recdata[i]);
-				tmp = result;
-
-			} catch (RemoteException e) {
-				throw e;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		System.out.println("rec parts size:" + size);
+		for (Hierachical_codes ri : parts.keySet()) {
+			Info info = parts.get(ri);
+			tmp = read_data_for_recovery(filename + "."+ri, info.getHost(),
+					info.getPort(), info.getName());
+			if (result == null)
+				result = tmp;
+			else
+				result = xor(tmp, result);
+			tmp = result;
 		}
-		this.write_data(filename + recoverd, result);
+
+		this.write_data(filename + "."+recoverd, result);
 
 	}
 
