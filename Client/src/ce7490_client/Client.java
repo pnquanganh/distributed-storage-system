@@ -4,9 +4,11 @@
  */
 package ce7490_client;
 
+import Info.Hierachical_codes;
+import Info.Info;
 import client_master_interface.*;
 import client_slave_interface.*;
-import hierachical_code.*;
+//import hierachical_code.*;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -28,14 +30,14 @@ import java.util.Map;
  */
 public class Client {
 
-    public static String master_hostname;
-    public static int master_port;
-    public static String master_name;
+    public static String master_hostname = "155.69.151.60";
+    public static int master_port = 2055;
+    public static String master_name = "Master";
     
     public static Writing_request_result get_writing_slaves(String filename,
             int filesize) throws Exception {
         try {
-	    Registry registry = LocateRegistry.getRegistry(master_hostname);
+	    Registry registry = LocateRegistry.getRegistry(master_hostname, master_port);
 	    client_master_interface writer = 
                     (client_master_interface) registry.lookup(master_name);
 	    Writing_request_result list_slaves = 
@@ -55,7 +57,7 @@ public class Client {
     public static Reading_request_result get_reading_slaves(String filename) 
             throws Exception {
         try {
-	    Registry registry = LocateRegistry.getRegistry(master_hostname);
+	    Registry registry = LocateRegistry.getRegistry(master_hostname, master_port);
 	    client_master_interface reader = 
                     (client_master_interface) registry.lookup(master_name);
 	    Reading_request_result list_slaves = 
@@ -76,7 +78,7 @@ public class Client {
             byte[] data, String slave_hostname,
             int slave_port, String slave_name) throws Exception {
         try {
-            Registry registry = LocateRegistry.getRegistry(slave_hostname);
+            Registry registry = LocateRegistry.getRegistry(slave_hostname, slave_port);
             client_slave_interface writer =
                     (client_slave_interface) registry.lookup(slave_name);
             writer.write_data(filename, data);
@@ -97,7 +99,7 @@ public class Client {
             int slave_port, 
             String slave_name) throws Exception {
         try {
-            Registry registry = LocateRegistry.getRegistry(slave_hostname);
+            Registry registry = LocateRegistry.getRegistry(slave_hostname, slave_port);
             client_slave_interface writer =
                     (client_slave_interface) registry.lookup(slave_name);
             return writer.read_data(filename);
@@ -315,28 +317,29 @@ public class Client {
         }
     }
 
-    public static void write(byte[] aInput, String aOutputFileName) {
-        //log("Writing binary file...");
-        try {
-            try (OutputStream output = new BufferedOutputStream(new FileOutputStream(aOutputFileName))) {
-                output.write(aInput);
-            }
-        } catch (FileNotFoundException ex) {
-            //log("File not found.");
-        } catch (IOException ex) {
-            //log(ex);
-        }
-    }
+	public static void write(byte[] aInput, String aOutputFileName) {
+		// log("Writing binary file...");
+		try {
+			OutputStream output = new BufferedOutputStream(
+					new FileOutputStream(aOutputFileName));
+			output.write(aInput);
+			output.close();
+		} catch (FileNotFoundException ex) {
+			// log("File not found.");
+		} catch (IOException ex) {
+			// log(ex);
+		}
+	}
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        String filename = "C:\\Users\\pham0071\\Downloads\\3 Constraints.pptx";
+        String filename = "readme-win.pdf";
         
         try {
-            read_operation(filename);
+            write_operation(filename);
         } catch (Exception e) {
         }
         
