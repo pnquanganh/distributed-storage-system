@@ -8,6 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -15,32 +17,39 @@ import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import Info.Hierachical_codes;
+import Info.Info;
+
 import master_slave_interface.master_slave_interface;
 import slave_master_interface.slave_master_interface;
 import client_slave_interface.client_slave_interface;
 
-public class Slave extends Thread implements client_slave_interface,
-		master_slave_interface {
+public class Slave implements client_slave_interface, master_slave_interface {
 	Registry registry;
-	private Info master_info;
-	private Info slave_info;
+	private Info master_info = new Info();
+	private Info slave_info = new Info();
 
 	public Info get_Slave_Info() {
 		return this.slave_info;
 	}
 
 	public Slave() throws RemoteException {
-		Registry registry = LocateRegistry.getRegistry(master_info.getHost());
+		master_info.setHost("155.69.151.60");
+		master_info.setPort(2055);
+		master_info.setName("Master");
+		Registry master_registry = LocateRegistry.getRegistry(
+				master_info.getHost(), master_info.getPort());
 		boolean join_system = false;
 		try {
 			slave_info.setHost((InetAddress.getLocalHost()).toString());
 		} catch (Exception e) {
 			System.out.println("can't get inet address.");
 		}
-		
-		int port = 3232;
+
+		int port = 5355;
 		slave_info.setPort(port);
-		System.out.println("this address=" + slave_info.getHost() + ",port=" + slave_info.getPort());
+		System.out.println("this address=" + slave_info.getHost() + ",port="
+				+ slave_info.getPort());
 		try {
 			registry = LocateRegistry.createRegistry(port);
 			registry.rebind("SlaveServer", this);
@@ -48,15 +57,19 @@ public class Slave extends Thread implements client_slave_interface,
 		} catch (RemoteException e) {
 			System.out.println("remote exception" + e);
 		}
-		slave_info.setName(getName());
+		slave_info.setName("SlaveServer");
 		while (!join_system) {
 			try {
-				slave_master_interface smi = (slave_master_interface) registry
+				slave_master_interface smi = (slave_master_interface) master_registry
 						.lookup(master_info.getName());
-				
+				// slave_master_interface smi = (slave_master_interface) Naming
+				// .lookup("rmi://155.69.151.60:2055/Master");
+				System.out.println("connection succeed");
 				join_system = smi.slave_join_dfs(slave_info);
+				System.out.println("join_system:" + join_system);
 			} catch (NotBoundException e1) {
 				e1.printStackTrace();
+				// System.exit(0);
 			} catch (RemoteException re) {
 				re.printStackTrace();
 			}
@@ -201,8 +214,9 @@ public class Slave extends Thread implements client_slave_interface,
 	public static void main(String[] args) {
 		try {
 			Slave slave = new Slave();
-			Thread heartbeat_thread = new Slave_HeartBeat(slave.get_Slave_Info());
-			heartbeat_thread.start();
+			Thread heartbeat_thread = new Slave_HeartBeat(
+					slave.get_Slave_Info());
+			// heartbeat_thread.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
