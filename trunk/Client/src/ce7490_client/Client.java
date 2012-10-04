@@ -225,22 +225,37 @@ public class Client {
 			o1 = read_from_slave(filename + ".O1", metadata,
 					Hierachical_codes.O1);
 		}
+		else{
+			System.out.println("Missing 01");
+		}
+		
 		if (slaves.containsKey(Hierachical_codes.O2)) {
 			o2 = read_from_slave(filename + ".O2", metadata,
 					Hierachical_codes.O2);
+		}
+		else{
+			System.out.println("Missing 02");
 		}
 		if (slaves.containsKey(Hierachical_codes.O3)) {
 			o3 = read_from_slave(filename + ".O3", metadata,
 					Hierachical_codes.O3);
 		}
+		else{
+			System.out.println("Missing 03");
+		}
 		if (slaves.containsKey(Hierachical_codes.O4)) {
 			o4 = read_from_slave(filename + ".O4", metadata,
 					Hierachical_codes.O4);
+		}
+		else{
+			System.out.println("Missing 04");
 		}
 
 		System.out.println(o1.length);
 		
 		if (o1 == null || o2 == null || o3 == null || o4 == null) {
+			
+			System.out.println("Missing");
 
 			if (o1 == null || o2 == null) {
 				if (slaves.containsKey(Hierachical_codes.O1O2)) {
@@ -357,16 +372,22 @@ public class Client {
 		// TODO code application logic here
 		String filename = "gradschooltalk.pdf";
 
+//		try{
+//			System.out.println("Hello");
+//		System.in.read();
+//		}catch(Exception e){}
+		
 //		try {
 //			write_operation(filename);
 //		} catch (Exception e) {
 //		}
+//		System.out.println("Finished");
 
-		 try {
-		 byte[] res = read_operation(filename);
-		 write(res, "test.pdf");
-		 } catch (Exception e) {
-		 }
+		try {
+			byte[] res = read_operation(filename);
+			write(res, "test.pdf");
+		} catch (Exception e) {
+		}
 
 		// byte[] data = read_file(filename);
 		// hierachical_code encoder = new hierachical_code();
