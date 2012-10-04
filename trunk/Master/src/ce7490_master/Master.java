@@ -17,7 +17,8 @@ import slave_master_interface.*;
 import master_slave_interface.*;
 import client_master_interface.*;
 
-public class Master extends UnicastRemoteObject implements client_master_interface, slave_master_interface {
+public class Master extends UnicastRemoteObject implements
+		client_master_interface, slave_master_interface {
 	/**
 	 * 
 	 */
@@ -40,9 +41,11 @@ public class Master extends UnicastRemoteObject implements client_master_interfa
 		try {
 			Registry registry = LocateRegistry.createRegistry(2055);
 			registry.rebind("Master", this);
-			
+
 			System.err.println("Master ready");
-			System.err.println(InetAddress.getLocalHost().toString() + ":2055");
+			System.err.println(InetAddress.getLocalHost().getHostAddress()
+					.toString()
+					+ ":2055");
 		} catch (Exception e) {
 			System.err.println("Master exception: " + e.toString());
 			e.printStackTrace();
@@ -64,7 +67,7 @@ public class Master extends UnicastRemoteObject implements client_master_interfa
 		}
 
 		(new TimeThread()).start();
-		//Info newinf = new Info();
+		// Info newinf = new Info();
 	}
 
 	public static void recovery() throws Exception {
@@ -90,7 +93,8 @@ public class Master extends UnicastRemoteObject implements client_master_interfa
 				}
 			}
 
-			HashMap<Hierachical_codes, HashSet<Hierachical_codes>> recovered = hierachical.recovery(missing);
+			HashMap<Hierachical_codes, HashSet<Hierachical_codes>> recovered = hierachical
+					.recovery(missing);
 
 			if (missing.size() > 0) {
 				files.remove(dFile);
@@ -128,7 +132,8 @@ public class Master extends UnicastRemoteObject implements client_master_interfa
 			Hierachical_codes i, HashMap<Hierachical_codes, Info> parts)
 			throws Exception {
 		try {
-			Registry registry = LocateRegistry.getRegistry(newSlave.getHost(), newSlave.getPort());
+			Registry registry = LocateRegistry.getRegistry(newSlave.getHost(),
+					newSlave.getPort());
 			master_slave_interface recoverer = (master_slave_interface) registry
 					.lookup(newSlave.getName());
 			recoverer.recoverBlock(dFile, i, parts);
@@ -189,14 +194,13 @@ public class Master extends UnicastRemoteObject implements client_master_interfa
 	@Override
 	public boolean slave_join_dfs(Info info) throws RemoteException {
 		// TODO Auto-generated method stub
-		
+
 		slaves.put(info, new HashSet<String>());
 		System.out.println(info.getHost() + " joins in!");
 
 		timeStamps.put(info, (Long) (System.currentTimeMillis() / 1000));
-		
-		
-		//System.out.println(string);
+
+		// System.out.println(string);
 
 		return true;
 	}
@@ -205,11 +209,13 @@ public class Master extends UnicastRemoteObject implements client_master_interfa
 		// TODO Auto-generated method stub
 
 		Long currentTime = System.currentTimeMillis() / 1000;
-		// System.out.println(currentTime);
+		System.out.println("Checking timestamps....");
 
 		for (Info i : slaves.keySet()) {
-			if (currentTime - timeStamps.get(i) > 240)
+			if (currentTime - timeStamps.get(i) > 10) {
 				deadSlaves.add(i);
+				System.out.println("Dead Slave:" + i.getHost());
+			}
 		}
 
 		if (!deadSlaves.isEmpty()) {
@@ -220,9 +226,11 @@ public class Master extends UnicastRemoteObject implements client_master_interfa
 	@Override
 	public void slave_heartbeat(Info info) throws RemoteException {
 		// TODO Auto-generated method stub
-
-		if (slaves.keySet().contains(info)) {
+		 //System.out.println(slaves.size());
+		
+		if (slaves.containsKey(info)) {
 			timeStamps.put(info, (Long) (System.currentTimeMillis() / 1000));
+			System.out.println(info.getHost() + " heartbeating...");
 		}
 	}
 
