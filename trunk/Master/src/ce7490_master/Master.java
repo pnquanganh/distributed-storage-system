@@ -1,5 +1,6 @@
 package ce7490_master;
 
+import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -20,11 +21,24 @@ public class Master implements client_master_interface, slave_master_interface {
 	public static Random rand;
 
 	public static Info getNextSlave(HashSet<Info> excludedSlaves, Random rand) {
-		
+
 		HashSet<Info> remainSlaves = new HashSet<Info>(slaves.keySet());
 		remainSlaves.removeAll(excludedSlaves);
-		
+
 		return (Info) remainSlaves.toArray()[rand.nextInt(remainSlaves.size())];
+	}
+
+	public Master() throws RemoteException {
+		try {
+			Registry registry = LocateRegistry.createRegistry(2055);
+			registry.bind("Master", this);
+
+			System.err.println("Master ready");
+			System.err.println(InetAddress.getLocalHost().toString() + ":2055");
+		} catch (Exception e) {
+			System.err.println("Master exception: " + e.toString());
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {
@@ -32,8 +46,14 @@ public class Master implements client_master_interface, slave_master_interface {
 		slaves = new HashMap<Info, HashSet<String>>();
 		deadSlaves = new HashSet<Info>();
 		rand = new Random(System.currentTimeMillis());
-		
-		
+
+		try {
+			new Master();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		(new TimeThread()).start();
 	}
 
@@ -55,14 +75,12 @@ public class Master implements client_master_interface, slave_master_interface {
 			for (Hierachical_codes i : Hierachical_codes.values()) {
 				if (deadSlaves.contains(relatedSlaves.get(i))) {
 					missing.add(i);
-				}
-				else{
+				} else {
 					excludedSlaves.add(relatedSlaves.get(i));
 				}
 			}
 
-			HashMap<Hierachical_codes, HashSet<Hierachical_codes>> recovered = hierachical_code
-					.recovery(missing);
+			HashMap<Hierachical_codes, HashSet<Hierachical_codes>> recovered = hierachical.recovery(missing);
 
 			if (missing.size() > 0) {
 				files.remove(dFile);
@@ -73,10 +91,9 @@ public class Master implements client_master_interface, slave_master_interface {
 
 						if (excludedSlaves.size() == slaves.size())
 							excludedSlaves.clear();
-						Info newSlave = getNextSlave(excludedSlaves, rand);						
+						Info newSlave = getNextSlave(excludedSlaves, rand);
 						excludedSlaves.add(newSlave);
 
-						
 						relatedSlaves.put(i, newSlave);
 
 						HashSet<String> fileinSlave = slaves.get(newSlave);
@@ -101,8 +118,9 @@ public class Master implements client_master_interface, slave_master_interface {
 			Hierachical_codes i, HashMap<Hierachical_codes, Info> parts)
 			throws Exception {
 		try {
-			Registry registry = LocateRegistry.getRegistry(newSlave.getHost());
-			master_slave_interface recoverer = (master_slave_interface) registry.lookup(newSlave.getName());
+			Registry registry = LocateRegistry.getRegistry(newSlave.getHost(), newSlave.getPort());
+			master_slave_interface recoverer = (master_slave_interface) registry
+					.lookup(newSlave.getName());
 			recoverer.recoverBlock(dFile, i, parts);
 
 		} catch (RemoteException e) {
@@ -110,7 +128,7 @@ public class Master implements client_master_interface, slave_master_interface {
 			// e.printStackTrace();
 			throw e;
 		} catch (Exception e) {
-			//System.err.println("Client exception: " + e.toString());
+			// System.err.println("Client exception: " + e.toString());
 			// e.printStackTrace();
 			throw e;
 		}
@@ -120,20 +138,19 @@ public class Master implements client_master_interface, slave_master_interface {
 	public Writing_request_result get_writing_slaves(String filename,
 			int filesize) throws RemoteException {
 		// TODO Auto-generated method stub
-		
-		System.out.println("Write file: "+filename);
-		
+
+		System.out.println("Write file: " + filename);
+
 		HashMap<Hierachical_codes, Info> fileslaves = new HashMap<Hierachical_codes, Info>();
 		HashSet<Info> excludedSlaves = new HashSet<Info>();
-		
+
 		for (Hierachical_codes i : Hierachical_codes.values()) {
-			
+
 			if (excludedSlaves.size() == slaves.size())
 				excludedSlaves.clear();
-			Info newSlave = getNextSlave(excludedSlaves, rand);		
+			Info newSlave = getNextSlave(excludedSlaves, rand);
 			excludedSlaves.add(newSlave);
 
-			
 			fileslaves.put(i, newSlave);
 			HashSet<String> fileinSlave = slaves.get(newSlave);
 			fileinSlave.add(filename);
@@ -153,35 +170,36 @@ public class Master implements client_master_interface, slave_master_interface {
 	public Reading_request_result get_reading_slaves(String filename)
 			throws RemoteException {
 		// TODO Auto-generated method stub
-		
-		System.out.println("Read file: "+filename);
-		
+
+		System.out.println("Read file: " + filename);
+
 		return files.get(filename);
 	}
 
 	@Override
 	public boolean slave_join_dfs(Info info) throws RemoteException {
 		// TODO Auto-generated method stub
-		
+
 		slaves.put(info, new HashSet<String>());
-		System.out.println(info.getHost()+" joins in!");
-		
-		timeStamps.put(info, (Long) (System.currentTimeMillis()/1000));
-		
+		System.out.println(info.getHost() + " joins in!");
+
+		timeStamps.put(info, (Long) (System.currentTimeMillis() / 1000));
+
 		return true;
 	}
 
 	public static void check() throws Exception {
 		// TODO Auto-generated method stub
-		
-		Long currentTime = System.currentTimeMillis()/1000;
-		for (Info i : slaves.keySet()){
+
+		Long currentTime = System.currentTimeMillis() / 1000;
+		// System.out.println(currentTime);
+
+		for (Info i : slaves.keySet()) {
 			if (currentTime - timeStamps.get(i) > 20)
 				deadSlaves.add(i);
 		}
-		
-		
-		if (!deadSlaves.isEmpty()){
+
+		if (!deadSlaves.isEmpty()) {
 			recovery();
 		}
 	}
@@ -189,9 +207,9 @@ public class Master implements client_master_interface, slave_master_interface {
 	@Override
 	public void slave_heartbeat(Info info) throws RemoteException {
 		// TODO Auto-generated method stub
-		
-		if (slaves.keySet().contains(info)){
-			timeStamps.put(info, (Long) (System.currentTimeMillis()/1000));
+
+		if (slaves.keySet().contains(info)) {
+			timeStamps.put(info, (Long) (System.currentTimeMillis() / 1000));
 		}
 	}
 
