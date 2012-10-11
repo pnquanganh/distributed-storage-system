@@ -127,7 +127,7 @@
 % *** GRAPHICS RELATED PACKAGES ***
 %
 \ifCLASSINFOpdf
-  % \usepackage[pdftex]{graphicx}
+   \usepackage[pdftex]{graphicx}
   % declare the path(s) where your graphic files are
   % \graphicspath{{../pdf/}{../jpeg/}}
   % and their extensions so you won't have to specify these with
@@ -359,23 +359,16 @@
 % author names and affiliations
 % use a multiple column layout for up to three different
 % affiliations
-\author{\IEEEauthorblockN{Michael Shell}
-\IEEEauthorblockA{School of Electrical and\\Computer Engineering\\
-Georgia Institute of Technology\\
-Atlanta, Georgia 30332--0250\\
-Email: http://www.michaelshell.org/contact.html}
+\author{
+\IEEEauthorblockN{Quang Anh Pham Nguyen}
+\IEEEauthorblockA{pnquanganh1986@gmail.com}
 \and
-\IEEEauthorblockN{Homer Simpson}
-\IEEEauthorblockA{Twentieth Century Fox\\
-Springfield, USA\\
-Email: homer@thesimpsons.com}
+\IEEEauthorblockN{Jun Zhang}
+\IEEEauthorblockA{jay.z.frozen@gmail.com}
 \and
-\IEEEauthorblockN{James Kirk\\ and Montgomery Scott}
-\IEEEauthorblockA{Starfleet Academy\\
-San Francisco, California 96678-2391\\
-Telephone: (800) 555--1212\\
-Fax: (888) 555--1212}}
-
+\IEEEauthorblockN{Sibo Wang}
+\IEEEauthorblockA{wangsibo.victor@gmail.com}
+}
 % conference papers do not typically use \thanks and this command
 % is locked out in conference mode. If really needed, such as for
 % the acknowledgment of grants, issue a \IEEEoverridecommandlockouts
@@ -411,10 +404,10 @@ Fax: (888) 555--1212}}
 \maketitle
 
 
-\begin{abstract}
+%\begin{abstract}
 %\boldmath
-The abstract goes here.
-\end{abstract}
+%The abstract goes here.
+%\end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
 % This preserves the distinction between vectors and scalars. However,
 % if the conference you are submitting to favors bold math in the abstract,
@@ -436,6 +429,40 @@ The abstract goes here.
 % For peerreview papers, this IEEEtran command inserts a page break and
 % creates the second title. It will be ignored for other modes.
 \IEEEpeerreviewmaketitle
+
+\section{Architecture}
+The design of our system is based on the Google File System\cite{gfs}. Figure (\ref{fig:a}) illustrates the overall architure of our distributed system.
+The system consists of a single master, multiple slaves and  multiple clients. The master maintains metadata of files stored on this system. The metadata of a file includes: encoded parts of the file, information of slaves storing these parts and the size of the original file. Slaves are responsible for storing data objects sent to them and returning these objects when requested. Each slave periodically sends its state to the master through heartbeat messages to claim that it is alive. The data object stored on the slave corresponds to a file. The encoding/decoding operations are executed on this object. The client can access the system to write and read data.
+Clients interact with the master and obtain the metadata of a file. After that, clients can communicate with slaves to get the content of the original file.
+
+\section{Operations}
+In this system, read and write operations are the most concerned. Both read and write operations need the coordination of masters and slaves to be finished. The detail of how these two opeations are conducted are given below.
+\subsection{Write operation}
+A write operation is lanuched by the client, and it mainly includes 3 steps to finish.
+\begin{itemize}
+\item Request: the client makes a request to the master to notify about this operation. The original size of the file is also included in this request for the decoding step in the future. The master itself records the information as the  metadata  of this file before sending them to the client.
+\item Encode data: The client encodes the file into several parts using erasure codes. For example, if we have a file $O$, we will encode it into 7 parts with the hierarcial code, $O1$,$O2$,$O3$,$O4$,$O1O2$,$O3O4$, $O1O2O3O4$.
+\item  Write to stable storage: the client contacts to each of slaves on the list and transfers the corresponding file name, part index and encoded data to the slaves. The slave stores this data as a file in its local file system with the name combined from original file name and part index (for example: a.txt.O1, a.txt.O1O2). 
+\end{itemize}
+
+However, there may be failures in the communication with the slaves. These failures may be caused by a communication problem or the fact that the slave already died and the master has not known about this (because of the delay in the maintaining process). We assume that there is only second type of failure in our experiments. In that case, the client should ignore these errors because sooner or later the master will detect this dead slave. The client does not need to acknowledge the master about the failed slave, which keeps the system still simple and efficient in failure handling.
+
+\subsection{Read operation}
+Similarly, a read operation includes 3 phases.
+\begin{itemize}
+\item Request: The client requests to the master to obtain the metadata of the file.
+\item Obtain Encoded data:  The client determines which slaves it should contact to retrieve the encoded data. For example, to read a file $O$, it has a list of slaves containing $O1$,$O2$,$O3$,$O4$,$O1O2$,$O3O4$, $O1O2O3O4$, the client will choose to communicate with the slaves owning the first 4 encoded data if they are all alive, otherwise, assume the slave owning $O2$ is dead, and in the list there is only information for slaves contain $O1$,$O3$,$O4$,$O1O2$,$O3O4$, $O1O2O3O4$, then the client will choose to communicate with $O1$, $O1O2$,$O3$,$O4$. The client can communicate with each slave sequentially or concurrently for a better performance. 
+\item Decode data: the client decodes the data and obtain the  original file content.
+\end{itemize}
+Similar to the write operation, there may exist a chance of failures because of 2  reasons mentioned above. In both cases, the client has to recalculate to decide one or more other parts needed to recover data; therefore, more communications are required. With these collected pieces of information, the decoding process is executed by the client. If the original file cannot be reconstructed in some fault scenarios, the read operation is unsuccessful. 
+
+\begin{figure}
+	\centering
+		\includegraphics[height=50mm]{a.jpg}
+		\caption{System Arcitecture}
+	\label{fig:a}
+\end{figure}
+
 
 \section{Failure Handling}
 % no \IEEEPARstart
@@ -462,6 +489,33 @@ Upon receiving the recovery request from the master, the slave obtain the missin
 \item Write to stable storage: The recovery slave write the content of missing index into its local disk and finish the recovery process for this missing index.
 \end{itemize}
 If there are many recovery requests from the master, the slave will do recovery for missing indexes one by one until it finishes all of the recovery request. When the slave doing recovery, it will not block the read and write requests from clients. 
+
+
+
+\subsection{Fault tolerance}
+If only one slave is dead, the client is still able to reconstruct the original file. However, when the number of dead slaves is more than 2, there are certain files cannot be recovered. This happens in one the following cases:
+\begin{itemize}
+\item The O1 and O2 parts are lost at the same time (the same for O3 and O4).
+\item	One of the parts O1, O2, O3 and O4 is lost and it cannot be recovered from the higher-layered parts (O1O2, O3O4 and O1O2O3O4).
+\end{itemize}
+In both cases, the system is not able to reconstruct one or more parts of O1, O2, O3 and O4 from the remaining data; therefore, it cannot rebuild the original file. Because the master asked the client to write 7 encoded pieces of Hierarchical code instance into different 7 slaves, both failed situations happen only when more than one slave is down. As the number of dead slave increases, the chance for these cases also increases; hence, more files are not able to be recovered
+
+\section{Cost analyses}
+\subsection{Reading Cost}
+When reading a file with the size S, the client tries to read the parts in {O1, O2, O3, O4} first. If there are not any errors in this step, the client has to perform 5 requests: 1 to master for Metadata and 4 to each slave. If the requests to slaves are executed sequentially, the total delay of a read operation is 5 round trips as well. However, the client can read data from slaves concurrently and in this case the total delay is only 2 round trips. The bandwidth consumed in a read operation is S (assume that the size of Metadata is not considerable compared to S).
+
+When the client cannot retrieve one of the parts of in {O1, O2, O3, O4}, say O1, it has to get the O1O2 and O3O4, O1O2O3O4 if necessary. Because slaves send heart beat messages to master every tb seconds, there is a latency when the master discovers the dead node and repair the lost data in that node. In this period of time, the master still returns the location of dead slaves to the client and the client will find out the state of these nodes after requesting to them. Hence, the client will consume one more request for each unknown dead slave. In our example, the client has to get the O1O2 piece to recreate the O1, the delay will increase by 1 round trip, the used bandwidth is 5/4 S. If the master knows that the O1O2 part is missing (and does not include this part in the list returned to client), the client will request to get O1O2 and O1O2O3O4; in this case, the delay will be added by 2 round trips and the total bandwidth consumed is  3/2 S. In the worst case, the master has not found that one or both two parts of O1O2 and O1O2O3O4 are not available; the client may waste up to 6 or 7 requests and the total bandwidth will be 3/2 S and 7/4 S, respectively.
+
+
+\subsection{Repairing Cost}
+Similar to the read operation, the repair delay depends on the number of data pieces to recover the lost piece. To recover the O1 the system spends 3 requests: 1 from master to the slave which will store O1; and 2 from this slave to acquire O2, O1O2. The delay will be 2 roundtrips if the last 2 requests are executed concurrently and the bandwidth is 1/2 S. In general, if we have to read n parts to recover one data piece, the delay is always 2 round trips and the consumed bandwidth is  n/4 S.
+
+\section{Lessons}
+In the process of designing, implementing and testing the system, we learned several useful lessons.
+One lesson we learned is that it is important to break the system into modules interacting via carefully designed interfaces. By clearly defining modules with specific tasks and actions, our team can develop each module independently and it takes little time and efforts to integrate these parts together. It does not only save the development time but also makes it easier to debug.
+Another lesson that we learned is the importance of applying RPC in distributed systems. In this project, we mainly focus on architecture-level aspects and we do not want to spend a lot of time on dealing with communication matters such as connection managing, object serializing and deserializing, error handling, etc. That is the reason why we use Java RMI to hide the details of communication implementation and make our system as simple as possible.
+
+
 %This demo file is intended to serve as a ``starter file''
 %for IEEE conference papers produced under \LaTeX\ using
 %IEEEtran.cls version 1.7 and later.
@@ -473,12 +527,12 @@ If there are many recovery requests from the master, the slave will do recovery 
  
 %\hfill January 11, 2007
 
-\subsection{Subsection Heading Here}
-Subsection text here.
+%\subsection{Subsection Heading Here}
+%Subsection text here.
 
 
-\subsubsection{Subsubsection Heading Here}
-Subsubsection text here.
+%\subsubsection{Subsubsection Heading Here}
+%Subsubsection text here.
 
 
 % An example of a floating figure using the graphicx package.
@@ -565,8 +619,8 @@ Subsubsection text here.
 
 
 
-\section{Conclusion}
-The conclusion goes here.
+%\section{Conclusion}
+%The conclusion goes here.
 
 
 
@@ -575,10 +629,10 @@ The conclusion goes here.
 
 
 % use section* for acknowledgement
-\section*{Acknowledgment}
+%\section*{Acknowledgment}
 
 
-The authors would like to thank...
+%The authors would like to thank...
 
 
 
@@ -608,9 +662,9 @@ The authors would like to thank...
 % (used to reserve space for the reference number labels box)
 \begin{thebibliography}{1}
 
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+\bibitem{gfs}
+
+Ghemawat, Sanjay; Gobioff, Howard; Leung, Shun-Tak (October 2003), "The Google File System", 19th Symposium on Operating Systems Principles (conference).
 
 \end{thebibliography}
 
