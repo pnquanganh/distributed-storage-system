@@ -435,7 +435,6 @@ The design of our system is based on the Google File System\cite{gfs}. Figure (\
 The system consists of a single master, multiple slaves and  multiple clients. Instead of using replicas to prevent from data loss, our system implements erasure code requiring lower storage usage. The master maintains metadata of files stored on this system. The metadata of a file includes: encoded parts of the file, information of slaves storing these parts and the size of the original file. Slaves are responsible for storing data objects sent to them and returning these objects when requested. Each slave periodically sends its state to the master through heartbeat messages to claim that it is alive. The data object stored on the slave corresponds to a file. The encoding/decoding operations are executed on this object. The client can access the system to write and read data.
 Clients interact with the master and obtain the metadata of a file. After that, clients can communicate with slaves to get the content of the original file.
 
-
 \section{Operations}
 In this system, read and write operations are the most concerned. Both read and write operations need the coordination of masters and slaves to be finished. The detail of how these two opeations are conducted are given below.
 \subsection{Write operation}
@@ -454,7 +453,7 @@ A write operation is lanuched by the client, and it mainly includes 3 steps to f
 	\label{fig:a}
 \end{figure}
 
-However, there may be failures in the communication with the slaves. These failures may be caused by a communication problem or the fact that the slave already died and the master has not known about this (because of the delay in the maintaining process). We assume that there is only second type of failure in our experiments. In that case, the client should ignore these errors because sooner or later the master will detect this dead slave. The client does not need to acknowledge the master about the failed slave, which keeps the system still simple and efficient in failure handling.
+However, there may be failures in the communication with the slaves. These failures may be caused by a communication problem or the fact that the slave already died and the master has not known about this (because of the delay in the maintaining process). We assume that there is only second type of failure in our experiments. In that case, the client should ignore these errors because sooner or later the master will detect this dead slave. The client does not need to acknowledge the master about the failed slave, which keeps the system still simple and efficient in failure handling. 
 
 \subsection{Read operation}
 Similarly, a read operation includes three phases.
@@ -511,10 +510,22 @@ When reading a file with the size S, the client tries to read the parts in $\lef
 When the client cannot retrieve one of the parts of in $\left\{O1, O2, O3, O4\right\}$, say $O1$, it has to get the $O1O2$ and $O3O4$, $O1O2O3O4$ if necessary. Because slaves send heart beat messages to master every $t_b$ seconds, there is a latency when the master discovers the dead node and repair the lost data in that node. In this period of time, the master still returns the location of dead slaves to the client and the client will find out the state of these nodes after requesting to them. Hence, the client will consume one more request for each unknown dead slave. In our example, the client has to get the $O1O2$ piece to recreate the $O1$, the delay will increase by 1 round trip, the used bandwidth is $\frac{5}{4}S$ . If the master knows that the $O1O2$ part is missing (and does not include this part in the list returned to client), the client will request to get $O1O2$ and $O1O2O3O4$; in this case, the delay will be added by $2$ round trips and the total bandwidth consumed is $\frac{3}{2}S$ . In the worst case, the master has not found that one or both two parts of $O1O2$ and $O1O2O3O4$ are not available; the client may waste up to $6$ or $7$ requests and the total bandwidth will be $\frac{3}{2}S$  and $\frac{7}{4}S$ , respectively.
 
 
+
 \subsection{Repairing Cost}
 Similar to the read operation, the repair delay depends on the number of data pieces to recover the lost piece. To recover $O1$ the system has a cost of $3$ requests: $1$ from master to the slave which will store $O1$; and $2$ from this slave to acquire $O2, O1O2$. The delay will be $2$ roundtrips if the last $2$ requests are executed concurrently and the bandwidth is $\frac{1}{2}S$ . In general, if we have to read n parts to recover one data piece, the delay is always $2$ round trips and the consumed bandwidth is  $\frac{n}{4}S$ .
 
-
+\section{Implementation Details}
+We use Java to implement our system design since Java provides RMI model which can facilitate the communication between different nodes.
+Several RMI services are defined to handle message passing between different nodes. The main communication includes: 
+\begin{itemize}
+\item Client sending read and write request to master: two interfaces get\_reading\_slaves(String filename), get\_writing\_slaves(String filename, int filesize) are defined to handle it.
+\item Client sending read and write request to slave:  corresponding interfaces are read\_data(String filename) and write\_data(String filename, byte[] data).
+\item Slave sending join request to master: The slave send this request to join the distributed file system, otherwise it will not be dispatched by the master. The interface is defined as slave\_join\_dfs(Info info), where Info is a class to store the node information including ip address, using port and RMI name.
+\item Slave sending heartbeat information to master: A thread is created for each slave to send heartbeat information periodically through RMI interface and sleeps if it is not sending heartbeat information. The interface is defined as slave\_heartbeat(Info info).
+\item Master sending recovering command to slave: Once the master detects dead slaves, the master sends recovering command to alive slaves.  The interface is: recoverBlock(String filename, Hierachical\_codes recoverd,
+			HashMap$<Hierachical\_codes, Info>$ parts), where Hierachical\_codes is a enumeration to specify $O1,O2,O3,O4,O1O2,O3O4,O1O2O3O4$.
+\item Slave sending read request to slave: When the slave is chosen to  recover files for dead slaves, the slave will read from other alive slaves which own the erasure code of this file, and reconstructs the lost part. The interface is same as the reading interface between client and slave.
+\end{itemize}
 \section{Experiments}
 This section experimentally evaluates the reliability of our system against two kinds of machine failure models. All experiments are conducted using a distributed file system with $1$ master, $1$ client, $10$ slaves and $40$ files stored. We run each experiment 20 times, so every point reported in the diagrams are the average of 20 results.
 
