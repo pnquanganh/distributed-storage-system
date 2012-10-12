@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdflatex 2012.2.16)  12 OCT 2012 16:25
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdflatex 2012.2.16)  12 OCT 2012 21:57
 entering extended mode
 **Distributed*System*Report.tex
 
@@ -186,28 +186,24 @@ Before submitting the final camera ready copy, remember to:
 [4 <C:/Users/jzhang/Desktop/Distributed System/trunk/Document/exp1.jpg> <C:/Use
 rs/jzhang/Desktop/Distributed System/trunk/Document/exp2.jpg>]
 ("C:\Users\jzhang\Desktop\Distributed System\trunk\Document\Distributed System 
-Report.aux")
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+Report.aux") ) 
 Here is how much of TeX's memory you used:
- 1602 strings out of 495285
- 25149 string characters out of 3181587
- 83201 words of memory out of 3000000
- 4839 multiletter control sequences out of 15000+200000
- 33007 words of font info for 62 fonts, out of 3000000 for 9000
+ 1605 strings out of 495285
+ 25165 string characters out of 3181587
+ 83207 words of memory out of 3000000
+ 4841 multiletter control sequences out of 15000+200000
+ 34143 words of font info for 63 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
  26i,8n,21p,1292b,293s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/CTEX/MiKTeX/fonts/enc/dvips/fontname/8r.enc}<C:/CTEX/MiKTeX/fonts/type1/p
-ublic/amsfonts/cm/cmmi10.pfb><C:/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmm
-i7.pfb><C:/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/CTEX/MiKTeX
-/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/CTEX/MiKTeX/fonts/type1/public/ams
-fonts/cm/cmsy10.pfb><C:/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C
-:/CTEX/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/CTEX/MiKTeX/fonts/type1/urw/
-times/utmbi8a.pfb><C:/CTEX/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/CTEX/MiK
-TeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on "Distributed System Report.pdf" (4 pages, 1120449 bytes).
+{C:/CTEX/MiKTeX/fonts/enc/dvips/fontname/8r.enc}<C:/CTEX/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmmi10.pfb><C:/CTEX/MiKTeX/fonts/type1/public/ams
+fonts/cm/cmmi7.pfb><C:/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:
+/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/CTEX/MiKTeX/fonts/type
+1/public/amsfonts/cm/cmsy10.pfb><C:/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/
+cmsy7.pfb><C:/CTEX/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/CTEX/MiKTeX/font
+s/type1/urw/times/utmbi8a.pfb><C:/CTEX/MiKTeX/fonts/type1/urw/times/utmr8a.pfb>
+<C:/CTEX/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
+Output written on "Distributed System Report.pdf" (4 pages, 1123124 bytes).
 PDF statistics:
  60 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
