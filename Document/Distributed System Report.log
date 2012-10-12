@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdflatex 2012.2.16)  12 OCT 2012 15:25
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdflatex 2012.2.16)  12 OCT 2012 16:25
 entering extended mode
 **Distributed*System*Report.tex
 
@@ -153,14 +153,25 @@ File: a.jpg Graphic file (type jpg)
 }}
 
 
- <C:/Users/jzhang/Desktop/Distributed System/trunk/Document/a.jpg>] [2]
-<exp1.jpg, id=19, 1087.06125pt x 688.82344pt>
+ <C:/Users/jzhang/Desktop/Distributed System/trunk/Document/a.jpg>]
+<recovery.jpg, id=13, 441.20834pt x 714.38895pt>
+File: recovery.jpg Graphic file (type jpg)
+ <use recovery.jpg>
+Overfull \hbox (11.58928pt too wide) in paragraph at lines 486--487
+ [][] 
+ []
+
+[2 <C:/Users/jzhang/Desktop/Distributed System/trunk/Document/recovery.jpg>]
+Underfull \hbox (badness 7116) in paragraph at lines 528--529
+[]\OT1/ptm/m/n/10 Client send-ing read and write re-quest to mas-
+ []
+
+[3] <exp1.jpg, id=23, 1090.0725pt x 683.55376pt>
 File: exp1.jpg Graphic file (type jpg)
  <use exp1.jpg>
-<exp2.jpg, id=20, 1098.35344pt x 681.29532pt>
+<exp2.jpg, id=24, 1098.35344pt x 681.29532pt>
 File: exp2.jpg Graphic file (type jpg)
- <use exp2.jpg> [3 <C:/Users/jzhang/Desktop/Distributed System/trunk/Document/e
-xp1.jpg> <C:/Users/jzhang/Desktop/Distributed System/trunk/Document/exp2.jpg>]
+ <use exp2.jpg>
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -172,30 +183,33 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[4
-
-]
+[4 <C:/Users/jzhang/Desktop/Distributed System/trunk/Document/exp1.jpg> <C:/Use
+rs/jzhang/Desktop/Distributed System/trunk/Document/exp2.jpg>]
 ("C:\Users\jzhang\Desktop\Distributed System\trunk\Document\Distributed System 
-Report.aux") ) 
+Report.aux")
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 1596 strings out of 495285
- 25061 string characters out of 3181587
- 84193 words of memory out of 3000000
- 4834 multiletter control sequences out of 15000+200000
+ 1602 strings out of 495285
+ 25149 string characters out of 3181587
+ 83201 words of memory out of 3000000
+ 4839 multiletter control sequences out of 15000+200000
  33007 words of font info for 62 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
  26i,8n,21p,1292b,293s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/CTEX/MiKTeX/fonts/enc/dvips/fontname/8r.enc}<C:/CTEX/MiKTeX/f
-onts/type1/public/amsfonts/cm/cmmi10.pfb><C:/CTEX/MiKTeX/fonts/type1/public/ams
-fonts/cm/cmmi7.pfb><C:/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:
-/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/CTEX/MiKTeX/fonts/type
-1/public/amsfonts/cm/cmsy10.pfb><C:/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/
-cmsy7.pfb><C:/CTEX/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/CTEX/MiKTeX/font
-s/type1/urw/times/utmbi8a.pfb><C:/CTEX/MiKTeX/fonts/type1/urw/times/utmr8a.pfb>
-<C:/CTEX/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on "Distributed System Report.pdf" (4 pages, 397321 bytes).
+{C:/CTEX/MiKTeX/fonts/enc/dvips/fontname/8r.enc}<C:/CTEX/MiKTeX/fonts/type1/p
+ublic/amsfonts/cm/cmmi10.pfb><C:/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmm
+i7.pfb><C:/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/CTEX/MiKTeX
+/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/CTEX/MiKTeX/fonts/type1/public/ams
+fonts/cm/cmsy10.pfb><C:/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C
+:/CTEX/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/CTEX/MiKTeX/fonts/type1/urw/
+times/utmbi8a.pfb><C:/CTEX/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/CTEX/MiK
+TeX/fonts/type1/urw/times/utmri8a.pfb>
+Output written on "Distributed System Report.pdf" (4 pages, 1120449 bytes).
 PDF statistics:
- 59 PDF objects out of 1000 (max. 8388607)
+ 60 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 16 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
 

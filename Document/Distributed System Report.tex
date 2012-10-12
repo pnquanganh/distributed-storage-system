@@ -453,7 +453,7 @@ A write operation is lanuched by the client, and it mainly includes 3 steps to f
 	\label{fig:a}
 \end{figure}
 
-However, there may be failures in the communication with the slaves. These failures may be caused by a communication problem or the fact that the slave already died and the master has not known about this (because of the delay in the maintaining process). We assume that there is only second type of failure in our experiments. In that case, the client should ignore these errors because sooner or later the master will detect this dead slave. The client does not need to acknowledge the master about the failed slave, which keeps the system still simple and efficient in failure handling. 
+However, there may be failures in the communication with the slaves. These failures may be caused by a communication problem or the fact that the slave already died and the master has not known about this (because of the delay in the maintaining process). We assume that there is only second type of failure in our experiments. In that case, the client should ignore these errors because sooner or later the master will detect this dead slave. The client does not need to acknowledge the master about the failed slave, which keeps the system still simple and efficient in failure handling.
 
 \subsection{Read operation}
 Similarly, a read operation includes three phases.
@@ -480,6 +480,13 @@ In the data recovery process, the master first establishes a list containing all
 \item Top-down Recovery Phase: Check indexes in a top-down order: $O1O2O3O4, O1O2, O3O4, O1, O2, O3, O4$. If an index $i$ is LOST and both of its father $f$ and sibling $s$ are OK, mark $i$ as OK and update $R_{i}$ to $R_{f}\cup R_{s}$; In our example, $O1O2$ is recoverable first by $O1O2O3O4$ and $O3O4$ with $R_{O1O2} = R_{O1O2O3O4}\cup R_{O3O4} = \left\{O3, O4, O1O2O3O4\right\}$. Then $O2$ can be restored by $O1O2$ and $O1$ with $R_{O2} = R_{O1O2}\cup R_{O1} = \left\{O1, O3, O4, O1O2O3O4\right\}$.
 \item Return: If there exists empty $R_i$ for any index $i$, return failed, else return all $R_i$ with $|R_i|\ge2$.
 \end{itemize}
+A more detailed example is given in Figure~\ref{fig:rec}.
+\begin{figure}
+	\centering
+		\includegraphics[height=150mm]{recovery.jpg}
+		\caption{An example of recovery process}
+	\label{fig:rec}
+\end{figure}
 
 If the recovery process returns failed, which means we cannot recover this file by remaining parts, our system delete this file from file list. Otherwise, we assign a new slave (with best-effort distributed law) for each missing index, and call the recovery process at the slave side with input argument: index to recover and a list of $(index, slave)$ pair for every needed index.
 
@@ -516,13 +523,13 @@ Similar to the read operation, the repair delay depends on the number of data pi
 
 \section{Implementation Details}
 We use Java to implement our system design since Java provides RMI model which can facilitate the communication between different nodes.
-Several RMI services are defined to handle message passing between different nodes. The main communication includes: 
+Several RMI services are defined to handle message passing between different nodes. The main communication includes:
 \begin{itemize}
 \item Client sending read and write request to master: two interfaces get\_reading\_slaves(String filename), get\_writing\_slaves(String filename, int filesize) are defined to handle it.
 \item Client sending read and write request to slave:  corresponding interfaces are read\_data(String filename) and write\_data(String filename, byte[] data).
 \item Slave sending join request to master: The slave send this request to join the distributed file system, otherwise it will not be dispatched by the master. The interface is defined as slave\_join\_dfs(Info info), where Info is a class to store the node information including ip address, using port and RMI name.
 \item Slave sending heartbeat information to master: A thread is created for each slave to send heartbeat information periodically through RMI interface and sleeps if it is not sending heartbeat information. The interface is defined as slave\_heartbeat(Info info).
-\item Master sending recovering command to slave: Once the master detects dead slaves, the master sends recovering command to alive slaves.  The interface is: recoverBlock(String filename, Hierachical\_codes recoverd,
+\item Master sending recovering command to slave: Once the master detects dead slaves, the master sends recovering command to alive slaves.  The interface is: recoverBlock(String filename, Hierachical\_codes recovered,
 			HashMap$<Hierachical\_codes, Info>$ parts), where Hierachical\_codes is a enumeration to specify $O1,O2,O3,O4,O1O2,O3O4,O1O2O3O4$.
 \item Slave sending read request to slave: When the slave is chosen to  recover files for dead slaves, the slave will read from other alive slaves which own the erasure code of this file, and reconstructs the lost part. The interface is same as the reading interface between client and slave.
 \end{itemize}
@@ -530,24 +537,29 @@ Several RMI services are defined to handle message passing between different nod
 This section experimentally evaluates the reliability of our system against two kinds of machine failure models. All experiments are conducted using a distributed file system with $1$ master, $1$ client, $10$ slaves and $40$ files stored. We run each experiment 20 times, so every point reported in the diagrams are the average of 20 results.
 
 
-\begin{figure}
-	\centering
-		\includegraphics[height=50mm]{exp1.jpg}
-		\caption{Reliability against Simultaneous Failures}
-	\label{fig:exp1}
-\end{figure}
+
 
 
 The first experiment tests the reliability of our system against simultaneous failures (see Figure~\ref{fig:exp1}). The y-axis is the average loss ratio of $40$ files stored in our system. The average loss of $40$ files increase with the number of simultaneous failures. When the number of failure is $1$, no file will be lost because (i) $7$ parts of a file is distributed into $7$ machines, so at most one part of a particular file is lost in this case; (ii) hierarchical code ensure recovery when only one part is lost. But if the failure number increased to $2$, there will be a small loss ratio since a file is unable to be recovered if $O1$ and $O2$ (or $O3$ and $O4$) are lost together. And in the extremely bad case, when the number of crashes increased to $7$ and above, all files will be lost.
 
+
+
+The results of our second experiments are given in Figure~\ref{fig:exp2}. In this experiment, we simulate the running of our system under a real world environment. Every machine is assigned an independent probability of failure, which is one of  1\%, 2\%, 5\% and 10\% per time interval. And once a machine failure happens, that machine will never come back again. The recovery process will be launched by the end of every time interval. When the failure probability is set to 1\%, which means the expected number of failure in each interval is 0.1 machine (1\%*$10$ machines), we can learn that our system is quite reliable and the loss ratio is extremely low. And it is also no surprise that with the increasing of the failure probability, the reliability of system degrades.
+
+
+\begin{figure}
+	\centering
+		\includegraphics[height=50mm]{exp1.jpg}
+		\caption{Reliability against simultaneous failures}
+	\label{fig:exp1}
+\end{figure}
+
 \begin{figure}
 	\centering
 		\includegraphics[height=50mm]{exp2.jpg}
-		\caption{Reliability against Sequential Failures}
+		\caption{Reliability against sequential failures}
 	\label{fig:exp2}
 \end{figure}
-
-The results of our second experiments are given in Figure~\ref{fig:exp2}. In this experiment, we simulate the running of our system under a real world environment. Every machine is assigned an independent probability of failure, which is one of  1\%, 2\%, 5\% and 10\% per time interval. And once a machine failure happens, that machine will never come back again. The recovery process will be launched by the end of every time interval. When the failure probability is set to 1\%, which means the expected number of failure in each interval is 0.1 machine (1\%*$10$ machines), we can learn that our system is quite reliable and the loss ratio is extremely low. And it is also no surprise that with the increasing of the failure probability, the reliability of system degrades.
 
 \section{Lessons}
 In the process of designing, implementing and testing the system, we learned several useful lessons.
