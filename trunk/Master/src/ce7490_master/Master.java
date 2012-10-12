@@ -79,6 +79,8 @@ public class Master extends UnicastRemoteObject implements
 			timeStamps.remove(dSlave);
 		}
 
+		damagedFiles.retainAll(files.keySet());
+
 		for (String dFile : damagedFiles) {
 			Reading_request_result fileInfo = files.get(dFile);
 			HashMap<Hierachical_codes, Info> relatedSlaves = fileInfo.slaves;
