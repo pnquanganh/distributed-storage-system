@@ -352,7 +352,7 @@
 %
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
-\title{Distributed System Report}
+\title{Distributed File System Report}
 %\title{Bare Demo of IEEEtran.cls for Conferences}
 
 
@@ -361,13 +361,13 @@
 % affiliations
 \author{
 \IEEEauthorblockN{Quang Anh Pham Nguyen}
-\IEEEauthorblockA{pnquanganh1986@gmail.com}
+\IEEEauthorblockA{ pham0071@ntu.edu.sg}
 \and
 \IEEEauthorblockN{Jun Zhang}
-\IEEEauthorblockA{jay.z.frozen@gmail.com}
+\IEEEauthorblockA{jzhang027@ntu.edu.sg}
 \and
 \IEEEauthorblockN{Sibo Wang}
-\IEEEauthorblockA{wangsibo.victor@gmail.com}
+\IEEEauthorblockA{wang0759@ntu.edu.sg}
 }
 % conference papers do not typically use \thanks and this command
 % is locked out in conference mode. If really needed, such as for
@@ -404,10 +404,10 @@
 \maketitle
 
 
-%\begin{abstract}
-%\boldmath
-%The abstract goes here.
-%\end{abstract}
+\begin{abstract}
+\boldmath
+This report presents the design of a centralized distributed file system. The architecture of our system is similar with GFS\cite{gfs}. However, our system has different fault tolerance mechanism from GFS. It exploits erasure code to make the  storage cost less than GFS, while still provides effective recovery. We analyze the cost of our system and use experiment shows that our distributed system is reliable and can handle most of the concurrent machine failures. 
+\end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
 % This preserves the distinction between vectors and scalars. However,
 % if the conference you are submitting to favors bold math in the abstract,
@@ -448,13 +448,13 @@ A write operation is lanuched by the client, and it mainly includes 3 steps to f
 However, there may be failures in the communication with the slaves. These failures may be caused by a communication problem or the fact that the slave already died and the master has not known about this (because of the delay in the maintaining process). We assume that there is only second type of failure in our experiments. In that case, the client should ignore these errors because sooner or later the master will detect this dead slave. The client does not need to acknowledge the master about the failed slave, which keeps the system still simple and efficient in failure handling.
 
 \subsection{Read operation}
-Similarly, a read operation includes 3 phases.
+Similarly, a read operation includes three phases.
 \begin{itemize}
 \item Request: The client requests to the master to obtain the metadata of the file.
 \item Obtain Encoded data:  The client determines which slaves it should contact to retrieve the encoded data. For example, to read a file $O$, it has a list of slaves containing $O1$, $O2$, $O3$, $O4$, $O1O2$, $O3O4$, $O1O2O3O4$, the client will choose to communicate with the slaves owning the first 4 encoded data if they are all alive, otherwise, assume the slave owning $O2$ is dead, and in the list there is only information for slaves contain $O1$, $O3$, $O4$, $O1O2$, $O3O4$, $O1O2O3O4$, then the client will choose to communicate with $O1$, $O1O2$, $O3$, $O4$. The client can communicate with each slave sequentially or concurrently for a better performance.
 \item Decode data: the client decodes the data and obtain the  original file content.
 \end{itemize}
-Similar to the write operation, there may exist a chance of failures because of 2  reasons mentioned above. In both cases, the client has to recalculate to decide one or more other parts needed to recover data; therefore, more communications are required. With these collected pieces of information, the decoding process is executed by the client. If the original file cannot be reconstructed in some fault scenarios, the read operation is unsuccessful.
+Similar to the write operation, there may exist a chance of failure because of two  reasons mentioned above. In both cases, the client has to recalculate to decide one or more other parts needed to recover data; therefore, more communications are required. With these collected pieces of information, the decoding process is executed by the client. If the original file cannot be reconstructed in some fault scenarios, the read operation is unsuccessful.
 
 \begin{figure}
 	\centering
@@ -469,12 +469,12 @@ Similar to the write operation, there may exist a chance of failures because of 
 \subsection{Failure Detection}
 In our distributed file system, the master maintains a timestamp table to record the last heartbeating time for every registered slave. Slaves are designed to send heartbeat messages to the master every $t_b$ seconds. After receiving the heartbeat message, the master updates the timestamp of that slave to the current system time. On the master side, a thread is built to check the timestamp table every $t_c$ seconds. Once the absolute difference between the timestamp of a slave and current system time of master exceeds a prescribed threshold, the master adds the slave to a \textit{dead\_slave}  list. After checking the timestamp of all slaves, the master starts the recovery process if the \textit{dead\_slave} list is not empty.
 \subsection{Data recovery: Master Side}
-In the data recovery function, the master first establishes a list containing all damaged files and their damaged part indexes, according to the \textit{dead\_slave} list and the metadata of all files. For each damaged file, the recovery process is given as follows.
+In the data recovery process, the master first establishes a list containing all damaged files and their damaged part indexes, according to the \textit{dead\_slave} list and the metadata of all files. For each damaged file, the recovery process is given as follows.
 \begin{itemize}
 \item Input: Damaged indexes set $S$, e.g., $\left\{O2, O1O2, O3O4\right\}$;
 \item Initialization: Mark damaged indexes as LOST, and set their recovery set $R$ as empty set (following the example, $O2$ is marked as LOST and $R_{O2} = \emptyset$ ); Mark non-damaged indexes as OK and set their recovery set $R$ to a set containing themselves ($O1$ is OK, and $R_{O1} = \left\{O1\right\}$ meaning O1 can be recovered by itself, or no recovery needed);
-\item Bottom-up Recovery Phase: Check indexes in a bottom-up order: $O1, O2, O3, O4, O1O2, O3O4, O1O2O3O4$. If an index $i$ is LOST and both of its children, say $c1$ and $c2$, are OK, mark $i$ as OK and update $R_{i}$ to $R_{c1}\cup R_{c2}$; In our example, $O3O4$ is recovered and $R_{O3O4} = R_{O3}\cup R_{O4} = \left\{O3, O4\right\}$ while $O2$ (no child) and $O1O2$ (child $O2$ is LOST) cannot be restored.
-\item Top-down Recovery Phase: Check indexes in a top-down order: $O1O2O3O4, O1O2, O3O4, O1, O2, O3, O4$. If an index $i$ is LOST and both of its father $f$ and sibling $s$ are OK, mark $i$ as OK and update $R_{i}$ to $R_{f}\cup R_{s}$; In our example, $O1O2$ is recovered first by $O1O2O3O4$ and $O3O4$ with $R_{O1O2} = R_{O1O2O3O4}\cup R_{O3O4} = \left\{O3, O4, O1O2O3O4\right\}$. Then $O2$ gets recovered by $O1O2$ and $O1$ with $R_{O2} = R_{O1O2}\cup R_{O1} = \left\{O1, O3, O4, O1O2O3O4\right\}$.
+\item Bottom-up Recovery Phase: Check indexes in a bottom-up order: $O1, O2, O3, O4, O1O2, O3O4, O1O2O3O4$. If an index $i$ is LOST and both of its children, say $c1$ and $c2$, are OK, mark $i$ as OK and update $R_{i}$ to $R_{c1}\cup R_{c2}$; In our example, $O3O4$ is recoverable and $R_{O3O4} = R_{O3}\cup R_{O4} = \left\{O3, O4\right\}$ while $O2$ (no child) and $O1O2$ (child $O2$ is LOST) cannot be restored.
+\item Top-down Recovery Phase: Check indexes in a top-down order: $O1O2O3O4, O1O2, O3O4, O1, O2, O3, O4$. If an index $i$ is LOST and both of its father $f$ and sibling $s$ are OK, mark $i$ as OK and update $R_{i}$ to $R_{f}\cup R_{s}$; In our example, $O1O2$ is recoverable first by $O1O2O3O4$ and $O3O4$ with $R_{O1O2} = R_{O1O2O3O4}\cup R_{O3O4} = \left\{O3, O4, O1O2O3O4\right\}$. Then $O2$ can be restored by $O1O2$ and $O1$ with $R_{O2} = R_{O1O2}\cup R_{O1} = \left\{O1, O3, O4, O1O2O3O4\right\}$.
 \item Return: If there exists empty $R_i$ for any index $i$, return failed, else return all $R_i$ with $|R_i|\ge2$.
 \end{itemize}
 
@@ -482,10 +482,10 @@ If the recovery process returns failed, which means we cannot recover this file 
 
 
 \subsection{Data recovery: Slave Side}
-Upon receiving the recovery request from the master, the slave obtain the missing index for the damaged file and know where to obtain the needed indexes to recover the missing index with the help of input arguments. Afterwards, the slave do the recovery with the following steps:
+Upon receiving the recovery request from the master, the slave obtains the missing index for the damaged file and know where to obtain the needed indexes to recover the missing index with the help of input arguments. Afterwards, the slave do the recovery with the following steps:
 \begin{itemize}
-\item Obtain indexes for recovery: The recovery slave read needed index from the slave which owns the index for the preparation of recovery. Here, the recovery slave acts like a client, and do a read operation from the slave who owns the index. For example, if the input argument is $O3O4$, and $<(O3,slave2),(O4,slave3)>$, the recovery slave will do a read operation to $O3$ from slave2, and a read opeartion to $O4$ from slave3 for the preparation of recovery index $O3O4$.
-\item Recovery data: After obtaining the indexes needed to recover the missing index, the recovery slave do the encode process for the indexes read in the previous step. For the example in previous step, the recovery slave is able to  encode for $O3O4$ with the content of index $O3$ and $O4$. After encoding, we obtain the content of index $O3O4$.
+\item Obtain indexes for recovery: The  slave doing recovery read needed index from the slave which owns the index for the preparation of recovery. Here, the  slave doing recovery acts like a client, and do a read operation from the slave who owns the index. For example, if the input argument is $O3O4$, and $<(O3,slave2),(O4,slave3)>$, the recovery slave will do a read operation to $O3$ from slave2, and a read opeartion to $O4$ from slave3 for the preparation of  $O3O4$ recovery.
+\item Recover data: After obtaining the indexes needed to recover the missing index, the slave handling recovery do the decode process for the indexes read in the previous step. For the example in previous step, the  slave doing recovery is able to  decode for $O3O4$ with the content of index $O3$ and $O4$. After decoding, we obtain the content of index $O3O4$.
 \item Write to stable storage: The recovery slave write the content of missing index into its local disk and finish the recovery process for this missing index.
 \end{itemize}
 If there are many recovery requests from the master, the slave will do recovery for missing indexes one by one until it finishes all of the recovery request. When the slave doing recovery, it will not block the read and write requests from clients.
@@ -498,17 +498,17 @@ If only one slave is dead, the client is still able to reconstruct the original 
 \item The $O1$ and $O2$ parts are lost at the same time (the same for $O3$ and $O4$).
 \item	One of the parts $O1, O2, O3$ and $O4$ is lost and it cannot be recovered from the higher-layered parts ($O1O2, O3O4$ and $O1O2O3O4$).
 \end{itemize}
-In both cases, the system is not able to reconstruct one or more parts of $O1, O2, O3$ and $O4$ from the remaining data; therefore, it cannot rebuild the original file. Because the master asked the client to write 7 encoded pieces of Hierarchical code instance into different 7 slaves, both failed situations happen only when more than one slave is down. As the number of dead slave increases, the chance for these cases also increases; hence, more files are not able to be recovered
+In both cases, the system is not able to reconstruct one or more parts of $O1, O2, O3$ and $O4$ from the remaining data; therefore, it cannot rebuild the original file. Because the master asked the client to write 7 encoded pieces of hierarchical code instance into 7 different  slaves, both failed situations happen only when more than one slave is down. As the number of dead slave increases, the chance for these cases also increases; hence, more files are not recoverable.
 
 \section{Cost analyses}
 \subsection{Reading Cost}
-When reading a file with the size S, the client tries to read the parts in $\left\{O1, O2, O3, O4\right\}$ first. If there are not any errors in this step, the client has to perform 5 requests: 1 to master for Metadata and 4 to each slave. If the requests to slaves are executed sequentially, the total delay of a read operation is 5 round trips as well. However, the client can read data from slaves concurrently and in this case the total delay is only 2 round trips. The bandwidth consumed in a read operation is S (assume that the size of Metadata is not considerable compared to S).
+When reading a file with the size S, the client tries to read the parts in $\left\{O1, O2, O3, O4\right\}$ first. If there are not any errors in this step, the client has to perform 5 requests: 1 to master for metadata and 4 to each slave. If the requests to slaves are executed sequentially, the total delay of a read operation is 5 round trips as well. However, the client can read data from slaves concurrently and in this case the total delay is only 2 round trips. The bandwidth consumed in a read operation is S (assume that the size of metadata can be ignored compared to S).
 
-When the client cannot retrieve one of the parts of in $\left\{O1, O2, O3, O4\right\}$, say $O1$, it has to get the $O1O2$ and $O3O4$, $O1O2O3O4$ if necessary. Because slaves send heart beat messages to master every $t_b$ seconds, there is a latency when the master discovers the dead node and repair the lost data in that node. In this period of time, the master still returns the location of dead slaves to the client and the client will find out the state of these nodes after requesting to them. Hence, the client will consume one more request for each unknown dead slave. In our example, the client has to get the $O1O2$ piece to recreate the $O1$, the delay will increase by 1 round trip, the used bandwidth is $5/4$ S. If the master knows that the $O1O2$ part is missing (and does not include this part in the list returned to client), the client will request to get $O1O2$ and $O1O2O3O4$; in this case, the delay will be added by $2$ round trips and the total bandwidth consumed is $3/2$ S. In the worst case, the master has not found that one or both two parts of $O1O2$ and $O1O2O3O4$ are not available; the client may waste up to $6$ or $7$ requests and the total bandwidth will be $3/2$ S and $7/4$ S, respectively.
+When the client cannot retrieve one of the parts of in $\left\{O1, O2, O3, O4\right\}$, say $O1$, it has to get the $O1O2$ and $O3O4$, $O1O2O3O4$ if necessary. Because slaves send heart beat messages to master every $t_b$ seconds, there is a latency when the master discovers the dead node and repair the lost data in that node. In this period of time, the master still returns the location of dead slaves to the client and the client will find out the state of these nodes after requesting to them. Hence, the client will consume one more request for each unknown dead slave. In our example, the client has to get the $O1O2$ piece to recreate the $O1$, the delay will increase by 1 round trip, the used bandwidth is $\frac{5}{4}S$ . If the master knows that the $O1O2$ part is missing (and does not include this part in the list returned to client), the client will request to get $O1O2$ and $O1O2O3O4$; in this case, the delay will be added by $2$ round trips and the total bandwidth consumed is $\frac{3}{2}S$ . In the worst case, the master has not found that one or both two parts of $O1O2$ and $O1O2O3O4$ are not available; the client may waste up to $6$ or $7$ requests and the total bandwidth will be $\frac{3}{2}S$  and $\frac{7}{4}S$ , respectively.
 
 
 \subsection{Repairing Cost}
-Similar to the read operation, the repair delay depends on the number of data pieces to recover the lost piece. To recover the $O1$ the system spends $3$ requests: $1$ from master to the slave which will store $O1$; and $2$ from this slave to acquire $O2, O1O2$. The delay will be $2$ roundtrips if the last $2$ requests are executed concurrently and the bandwidth is $1/2$ S. In general, if we have to read n parts to recover one data piece, the delay is always $2$ round trips and the consumed bandwidth is  $n/4$ S.
+Similar to the read operation, the repair delay depends on the number of data pieces to recover the lost piece. To recover $O1$ the system has a cost of $3$ requests: $1$ from master to the slave which will store $O1$; and $2$ from this slave to acquire $O2, O1O2$. The delay will be $2$ roundtrips if the last $2$ requests are executed concurrently and the bandwidth is $\frac{1}{2}S$ . In general, if we have to read n parts to recover one data piece, the delay is always $2$ round trips and the consumed bandwidth is  $\frac{n}{4}S$ .
 
 \section{Lessons}
 In the process of designing, implementing and testing the system, we learned several useful lessons.
