@@ -406,7 +406,7 @@
 
 \begin{abstract}
 \boldmath
-This report presents the design of a centralized distributed file system. The architecture of our system is similar with GFS\cite{gfs}. However, our system has a different fault tolerance mechanism from GFS. It exploits erasure code to make the  storage cost less than GFS, while still provides effective recovery. We analyze the cost of our system and use experiment to show that our distributed system is reliable and can handle two models of machine failures.
+This report presents the design of a centralized distributed file system. The architecture of our system is similar with GFS\cite{gfs}. However, our system has a different fault tolerance mechanism from GFS. It exploits erasure code, specifically hierarchical code\cite{hc} in our implementation, to make the storage cost less than GFS, while still provides effective recovery. We analyze the cost of our system and use experiment to show that our distributed system is reliable and can handle two kinds of machine failures.
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
 % This preserves the distinction between vectors and scalars. However,
@@ -431,17 +431,17 @@ This report presents the design of a centralized distributed file system. The ar
 \IEEEpeerreviewmaketitle
 
 \section{Architecture}
-The design of our system is based on the Google File System\cite{gfs}. Figure (\ref{fig:a}) illustrates the overall architure of our distributed system.
+The design of our system is based on the Google File System\cite{gfs}. Figure (\ref{fig:a}) illustrates the overall architecture of our distributed system.
 The system consists of a single master, multiple slaves and  multiple clients. Instead of using replicas to prevent from data loss, our system implements erasure code requiring lower storage usage. The master maintains metadata of files stored on this system. The metadata of a file includes: encoded parts of the file, information of slaves storing these parts and the size of the original file. Slaves are responsible for storing data objects sent to them and returning these objects when requested. Each slave periodically sends its state to the master through heartbeat messages to claim that it is alive. The data object stored on the slave corresponds to a file. The encoding/decoding operations are executed on this object. The client can access the system to write and read data.
 Clients interact with the master and obtain the metadata of a file. After that, clients can communicate with slaves to get the content of the original file.
 
 \section{Operations}
-In this system, read and write operations are the most concerned. Both read and write operations need the coordination of masters and slaves to be finished. The detail of how these two opeations are conducted are given below.
+In this system, read and write operations are the most concerned. Both read and write operations need the coordination of masters and slaves to be finished. The detail of how these two operations are conducted are given below.
 \subsection{Write operation}
-A write operation is lanuched by the client, and it mainly includes 3 steps to finish.
+A write operation is launched by the client, and it mainly includes 3 steps to finish.
 \begin{itemize}
 \item Request: the client makes a request to the master to notify about this operation. The original size of the file is also included in this request for the decoding step in the future. The master itself records the information as the  metadata  of this file before sending them to the client.
-\item Encode data: The client encodes the file into several parts using erasure codes. For example, if we have a file $O$, we will encode it into 7 parts with the hierarcial code, $O1$, $O2$, $O3$, $O4$, $O1O2$, $O3O4$, $O1O2O3O4$.
+\item Encode data: The client encodes the file into several parts using erasure codes. For example, if we have a file $O$, we will encode it into 7 parts with the hierarchical code, $O1$, $O2$, $O3$, $O4$, $O1O2$, $O3O4$, $O1O2O3O4$.
 \item  Write to stable storage: the client contacts to each of slaves on the list and transfers the corresponding file name, part index and encoded data to the slaves. The slave stores this data as a file in its local file system with the name combined from original file name and part index (for example: a.txt.$O1$, a.txt.$O1O2$).
 \end{itemize}
 
@@ -449,7 +449,7 @@ A write operation is lanuched by the client, and it mainly includes 3 steps to f
 \begin{figure}
 	\centering
 		\includegraphics[height=50mm]{a.jpg}
-		\caption{System Arcitecture}
+		\caption{System Architecture}
 	\label{fig:a}
 \end{figure}
 
@@ -488,13 +488,13 @@ A more detailed example is given in Figure~\ref{fig:rec}.
 	\label{fig:rec}
 \end{figure}
 
-If the recovery process returns failed, which means we cannot recover this file by remaining parts, our system delete this file from file list. Otherwise, we assign a new slave (with best-effort distributed law) for each missing index, and call the recovery process at the slave side with input argument: index to recover and a list of $(index, slave)$ pair for every needed index.
+If the recovery process returns failed, which means we cannot recover this file by remaining parts, our system delete this file from file list. Otherwise, we assign a new slave for each missing index, and call the recovery process at the slave side with input argument: index to recover and a list of $(index, slave)$ pair for every needed index.
 
 
 \subsection{Data recovery: Slave Side}
 Upon receiving the recovery request from the master, the slave obtains the missing index for the damaged file and know where to obtain the needed indexes to recover the missing index with the help of input arguments. Afterwards, the slave do the recovery with the following steps:
 \begin{itemize}
-\item Obtain indexes for recovery: The  slave doing recovery read needed index from the slave which owns the index for the preparation of recovery. Here, the  slave doing recovery acts like a client, and do a read operation from the slave who owns the index. For example, if the input argument is $O3O4$, and $<(O3,slave2),(O4,slave3)>$, the recovery slave will do a read operation to $O3$ from slave2, and a read opeartion to $O4$ from slave3 for the preparation of  $O3O4$ recovery.
+\item Obtain indexes for recovery: The  slave doing recovery read needed index from the slave which owns the index for the preparation of recovery. Here, the  slave doing recovery acts like a client, and do a read operation from the slave who owns the index. For example, if the input argument is $O3O4$, and $<(O3,slave2),(O4,slave3)>$, the recovery slave will do a read operation to $O3$ from slave2, and a read operation to $O4$ from slave3 for the preparation of  $O3O4$ recovery.
 \item Recover data: After obtaining the indexes needed to recover the missing index, the slave handling recovery do the decode process for the indexes read in the previous step. For the example in previous step, the  slave doing recovery is able to  decode for $O3O4$ with the content of index $O3$ and $O4$. After decoding, we obtain the content of index $O3O4$.
 \item Write to stable storage: The recovery slave write the content of missing index into its local disk and finish the recovery process for this missing index.
 \end{itemize}
@@ -522,7 +522,7 @@ When the client cannot retrieve one of the parts of in $\left\{O1, O2, O3, O4\ri
 Similar to the read operation, the repair delay depends on the number of data pieces to recover the lost piece. To recover $O1$ the system has a cost of $3$ requests: $1$ from master to the slave which will store $O1$; and $2$ from this slave to acquire $O2, O1O2$. The delay will be $2$ roundtrips if the last $2$ requests are executed concurrently and the bandwidth is $\frac{1}{2}S$ . In general, if we have to read n parts to recover one data piece, the delay is always $2$ round trips and the consumed bandwidth is  $\frac{n}{4}S$ .
 
 \section{Implementation Details}
-We use Java to implement our system design since Java provides RMI model which can facilitate the communication between different nodes.
+We use Java to implement our system design since Java provides RMI model\cite{RMI} which can facilitate the communication between different nodes.
 Several RMI services are defined to handle message passing between different nodes. The main communication includes:
 \begin{itemize}
 \item Client sending read and write request to master: two interfaces get\_reading\_slaves(String filename), get\_writing\_slaves(String filename, int filesize) are defined to handle it.
@@ -714,8 +714,15 @@ Another lesson that we learned is the importance of applying RPC in distributed 
 \begin{thebibliography}{1}
 
 \bibitem{gfs}
+S. Ghemawat, H. Gobioff and S. Leung, "The Google File System," in {\em 19th Symposium on Operating Systems Principles}.
 
-Ghemawat, Sanjay; Gobioff, Howard; Leung, Shun-Tak (October 2003), "The Google File System", 19th Symposium on Operating Systems Principles (conference).
+
+\bibitem{RMI}
+Java RMI Documentation,\\ {\em http://docs.oracle.com/javase/6/docs/technotes/guides/rmi/index.html}.
+
+
+\bibitem{hc}
+F. Oggier and A. Datta, "Self-repairing Homomorphic Codes for Distributed Storage Systems," in {\em INFOCOM, 2011}.
 
 \end{thebibliography}
 
