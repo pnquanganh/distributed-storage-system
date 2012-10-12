@@ -406,7 +406,7 @@
 
 \begin{abstract}
 \boldmath
-This report presents the design of a centralized distributed file system. The architecture of our system is similar with GFS\cite{gfs}. However, our system has different fault tolerance mechanism from GFS. It exploits erasure code to make the  storage cost less than GFS, while still provides effective recovery. We analyze the cost of our system and use experiment shows that our distributed system is reliable and can handle most of the concurrent machine failures. 
+This report presents the design of a centralized distributed file system. The architecture of our system is similar with GFS\cite{gfs}. However, our system has a different fault tolerance mechanism from GFS. It exploits erasure code to make the  storage cost less than GFS, while still provides effective recovery. We analyze the cost of our system and use experiment shows that our distributed system is reliable and can handle two models of machine failures.
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
 % This preserves the distinction between vectors and scalars. However,
@@ -435,6 +435,7 @@ The design of our system is based on the Google File System\cite{gfs}. Figure (\
 The system consists of a single master, multiple slaves and  multiple clients. Instead of using replicas to prevent from data loss, our system implements erasure code requiring lower storage usage. The master maintains metadata of files stored on this system. The metadata of a file includes: encoded parts of the file, information of slaves storing these parts and the size of the original file. Slaves are responsible for storing data objects sent to them and returning these objects when requested. Each slave periodically sends its state to the master through heartbeat messages to claim that it is alive. The data object stored on the slave corresponds to a file. The encoding/decoding operations are executed on this object. The client can access the system to write and read data.
 Clients interact with the master and obtain the metadata of a file. After that, clients can communicate with slaves to get the content of the original file.
 
+
 \section{Operations}
 In this system, read and write operations are the most concerned. Both read and write operations need the coordination of masters and slaves to be finished. The detail of how these two opeations are conducted are given below.
 \subsection{Write operation}
@@ -444,6 +445,14 @@ A write operation is lanuched by the client, and it mainly includes 3 steps to f
 \item Encode data: The client encodes the file into several parts using erasure codes. For example, if we have a file $O$, we will encode it into 7 parts with the hierarcial code, $O1$, $O2$, $O3$, $O4$, $O1O2$, $O3O4$, $O1O2O3O4$.
 \item  Write to stable storage: the client contacts to each of slaves on the list and transfers the corresponding file name, part index and encoded data to the slaves. The slave stores this data as a file in its local file system with the name combined from original file name and part index (for example: a.txt.$O1$, a.txt.$O1O2$).
 \end{itemize}
+
+
+\begin{figure}
+	\centering
+		\includegraphics[height=50mm]{a.jpg}
+		\caption{System Arcitecture}
+	\label{fig:a}
+\end{figure}
 
 However, there may be failures in the communication with the slaves. These failures may be caused by a communication problem or the fact that the slave already died and the master has not known about this (because of the delay in the maintaining process). We assume that there is only second type of failure in our experiments. In that case, the client should ignore these errors because sooner or later the master will detect this dead slave. The client does not need to acknowledge the master about the failed slave, which keeps the system still simple and efficient in failure handling.
 
@@ -456,12 +465,7 @@ Similarly, a read operation includes three phases.
 \end{itemize}
 Similar to the write operation, there may exist a chance of failure because of two  reasons mentioned above. In both cases, the client has to recalculate to decide one or more other parts needed to recover data; therefore, more communications are required. With these collected pieces of information, the decoding process is executed by the client. If the original file cannot be reconstructed in some fault scenarios, the read operation is unsuccessful.
 
-\begin{figure}
-	\centering
-		\includegraphics[height=50mm]{a.jpg}
-		\caption{System Arcitecture}
-	\label{fig:a}
-\end{figure}
+
 
 
 \section{Failure Handling}
@@ -509,6 +513,30 @@ When the client cannot retrieve one of the parts of in $\left\{O1, O2, O3, O4\ri
 
 \subsection{Repairing Cost}
 Similar to the read operation, the repair delay depends on the number of data pieces to recover the lost piece. To recover $O1$ the system has a cost of $3$ requests: $1$ from master to the slave which will store $O1$; and $2$ from this slave to acquire $O2, O1O2$. The delay will be $2$ roundtrips if the last $2$ requests are executed concurrently and the bandwidth is $\frac{1}{2}S$ . In general, if we have to read n parts to recover one data piece, the delay is always $2$ round trips and the consumed bandwidth is  $\frac{n}{4}S$ .
+
+
+\section{Experiments}
+This section experimentally evaluates the reliability of our system against two kinds of machine failure models. All experiments are conducted using a distributed file system with $1$ master, $1$ client, $10$ slaves and $40$ files stored. We run each experiment 20 times, so every point reported in the diagrams are the average of 20 results.
+
+
+\begin{figure}
+	\centering
+		\includegraphics[height=50mm]{exp1.jpg}
+		\caption{Reliability against Simultaneous Failures}
+	\label{fig:exp1}
+\end{figure}
+
+
+The first experiment tests the reliability of our system against simultaneous failures (see Figure~\ref{fig:exp1}). The y-axis is the average loss ratio of $40$ files stored in our system. The average loss of $40$ files increase with the number of simultaneous failures. When the number of failure is $1$, no file will be lost because (i) $7$ parts of a file is distributed into $7$ machines, so at most one part of a particular file is lost in this case; (ii) hierarchical code ensure recovery when only one part is lost. But if the failure number increased to $2$, there will be a small loss ratio since a file is unable to be recovered if $O1$ and $O2$ (or $O3$ and $O4$) are lost together. And in the extremely bad case, when the number of crashes increased to $7$ and above, all files will be lost.
+
+\begin{figure}
+	\centering
+		\includegraphics[height=50mm]{exp2.jpg}
+		\caption{Reliability against Sequential Failures}
+	\label{fig:exp2}
+\end{figure}
+
+The results of our second experiments are given in Figure~\ref{fig:exp2}. In this experiment, we simulate the running of our system under a real world environment. Every machine is assigned an independent probability of failure, which is one of  1\%, 2\%, 5\% and 10\% per time interval. And once a machine failure happens, that machine will never come back again. The recovery process will be launched by the end of every time interval. When the failure probability is set to 1\%, which means the expected number of failure in each interval is 0.1 machine (1\%*$10$ machines), we can learn that our system is quite reliable and the loss ratio is extremely low. And it is also no surprise that with the increasing of the failure probability, the reliability of system degrades.
 
 \section{Lessons}
 In the process of designing, implementing and testing the system, we learned several useful lessons.
