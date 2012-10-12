@@ -521,7 +521,7 @@ When the client cannot retrieve one of the parts of in $\left\{O1, O2, O3, O4\ri
 \subsection{Repairing Cost}
 Similar to the read operation, the repair delay depends on the number of data pieces to recover the lost piece. To recover $O1$ the system has a cost of $3$ requests: $1$ from master to the slave which will store $O1$; and $2$ from this slave to acquire $O2, O1O2$. The delay will be $2$ roundtrips if the last $2$ requests are executed concurrently and the bandwidth is $\frac{1}{2}S$ . In general, if we have to read n parts to recover one data piece, the delay is always $2$ round trips and the consumed bandwidth is  $\frac{n}{4}S$ .
 
-\section{Implementation Details}
+\section{Communication Model}
 We use Java to implement our system design since Java provides RMI model\cite{RMI} which can facilitate the communication between different nodes.
 Several RMI services are defined to handle message passing between different nodes. The main communication includes:
 \begin{itemize}
