@@ -152,7 +152,7 @@ portico.loglevel = ERROR
 #        The UDP address the JGroups binding will communicate on.
 #        DEFAULT: 228.10.10.10
 #
-# portico.jgroups.udp.address = 228.10.10.10 
+# portico.jgroups.udp.address = 155.69.151.60
 
 # (3.4) JGroups UDP Port
 #        The UDP port the JGroups binding will communicate on.
@@ -164,7 +164,7 @@ portico.loglevel = ERROR
 #        The address/NIC JGroups should use. Try setting this to your desired NIC if setting
 #        the send/receive interfaces don't work.
 #
-# portico.jgroups.udp.bindAddress = 
+portico.jgroups.udp.bindAddress = 155.69.151.60
 
 # (3.6) JGroup UDP Receive Interfaces
 #        The interfaces/addresses JGroups will listen on for incoming multicast packets. This

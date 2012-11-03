@@ -1,0 +1,234 @@
+ERROR [main] portico.lrc: name=ExampleFederation
+org.portico.lrc.compat.JFederationExecutionDoesNotExist: name=ExampleFederation
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:248)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at basestationsimulation.BaseStationFederate.runFederate(BaseStationFederate.java:207)
+	at basestationsimulation.BaseStationSimulation.main(BaseStationSimulation.java:34)
+ERROR [main] portico.lrc.jgroups: Error connecting to channel [ExampleFederation]: failed to start protocol stack
+org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:241)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at basestationsimulation.BaseStationFederate.runFederate(BaseStationFederate.java:207)
+	at basestationsimulation.BaseStationSimulation.main(BaseStationSimulation.java:34)
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc: org.jgroups.ChannelException: failed to start protocol stack
+org.portico.lrc.compat.JRTIinternalError: org.jgroups.ChannelException: failed to start protocol stack
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:112)
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:241)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at basestationsimulation.BaseStationFederate.runFederate(BaseStationFederate.java:207)
+	at basestationsimulation.BaseStationSimulation.main(BaseStationSimulation.java:34)
+Caused by: org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	... 8 more
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc.jgroups: Error connecting to channel [ExampleFederation]: failed to start protocol stack
+org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:241)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at basestationsimulation.BaseStationFederate.runFederate(BaseStationFederate.java:207)
+	at basestationsimulation.BaseStationSimulation.main(BaseStationSimulation.java:34)
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc: org.jgroups.ChannelException: failed to start protocol stack
+org.portico.lrc.compat.JRTIinternalError: org.jgroups.ChannelException: failed to start protocol stack
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:112)
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:241)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at basestationsimulation.BaseStationFederate.runFederate(BaseStationFederate.java:207)
+	at basestationsimulation.BaseStationSimulation.main(BaseStationSimulation.java:34)
+Caused by: org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	... 8 more
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc.jgroups: Error connecting to channel [ExampleFederation]: failed to start protocol stack
+org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:241)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at basestationsimulation.BaseStationFederate.runFederate(BaseStationFederate.java:207)
+	at basestationsimulation.BaseStationSimulation.main(BaseStationSimulation.java:34)
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=/155.69.151.60, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc: org.jgroups.ChannelException: failed to start protocol stack
+org.portico.lrc.compat.JRTIinternalError: org.jgroups.ChannelException: failed to start protocol stack
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:112)
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:241)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at basestationsimulation.BaseStationFederate.runFederate(BaseStationFederate.java:207)
+	at basestationsimulation.BaseStationSimulation.main(BaseStationSimulation.java:34)
+Caused by: org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	... 8 more
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=/155.69.151.60, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc: name=ExampleFederation
+org.portico.lrc.compat.JFederationExecutionDoesNotExist: name=ExampleFederation
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:248)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at basestationsimulation.BaseStationFederate.runFederate(BaseStationFederate.java:207)
+	at basestationsimulation.BaseStationSimulation.main(BaseStationSimulation.java:34)
+ERROR [main] portico.lrc: federate name in use: BaseStationFed0
+org.portico.lrc.compat.JFederateAlreadyExecutionMember: federate name in use: BaseStationFed0
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:260)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at basestationsimulation.BaseStationFederate.runFederate(BaseStationFederate.java:207)
+	at basestationsimulation.BaseStationSimulation.main(BaseStationSimulation.java:34)
+ERROR [main] portico.lrc.jgroups: Error connecting to channel [ExampleFederation]: failed to start protocol stack
+org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:241)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at basestationsimulation.BaseStationFederate.runFederate(BaseStationFederate.java:207)
+	at basestationsimulation.BaseStationSimulation.main(BaseStationSimulation.java:34)
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc: org.jgroups.ChannelException: failed to start protocol stack
+org.portico.lrc.compat.JRTIinternalError: org.jgroups.ChannelException: failed to start protocol stack
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:112)
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:241)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at basestationsimulation.BaseStationFederate.runFederate(BaseStationFederate.java:207)
+	at basestationsimulation.BaseStationSimulation.main(BaseStationSimulation.java:34)
+Caused by: org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	... 8 more
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more

@@ -1,0 +1,512 @@
+ERROR [main] portico.lrc.jgroups: Error connecting to channel [ExampleFederation]: failed to start protocol stack
+org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:155)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc: org.jgroups.ChannelException: failed to start protocol stack
+org.portico.lrc.compat.JRTIinternalError: org.jgroups.ChannelException: failed to start protocol stack
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:112)
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:155)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+Caused by: org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	... 8 more
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc: federation exists: ExampleFederation
+org.portico.lrc.compat.JFederationExecutionAlreadyExists: federation exists: ExampleFederation
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:163)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federate name in use: sourceFederate
+org.portico.lrc.compat.JFederateAlreadyExecutionMember: federate name in use: sourceFederate
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:260)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:201)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federation exists: ExampleFederation
+org.portico.lrc.compat.JFederationExecutionAlreadyExists: federation exists: ExampleFederation
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:163)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federate name in use: sourceFederate
+org.portico.lrc.compat.JFederateAlreadyExecutionMember: federate name in use: sourceFederate
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:260)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:201)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federation exists: ExampleFederation
+org.portico.lrc.compat.JFederationExecutionAlreadyExists: federation exists: ExampleFederation
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:163)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federate name in use: sourceFederate
+org.portico.lrc.compat.JFederateAlreadyExecutionMember: federate name in use: sourceFederate
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:260)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:201)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federation exists: ExampleFederation
+org.portico.lrc.compat.JFederationExecutionAlreadyExists: federation exists: ExampleFederation
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:163)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federate name in use: sourceFederate
+org.portico.lrc.compat.JFederateAlreadyExecutionMember: federate name in use: sourceFederate
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:260)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:201)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federation exists: ExampleFederation
+org.portico.lrc.compat.JFederationExecutionAlreadyExists: federation exists: ExampleFederation
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:163)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federate name in use: sourceFederate
+org.portico.lrc.compat.JFederateAlreadyExecutionMember: federate name in use: sourceFederate
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:260)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:201)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federation exists: ExampleFederation
+org.portico.lrc.compat.JFederationExecutionAlreadyExists: federation exists: ExampleFederation
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:163)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federate name in use: sourceFederate
+org.portico.lrc.compat.JFederateAlreadyExecutionMember: federate name in use: sourceFederate
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:260)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:201)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federation exists: ExampleFederation
+org.portico.lrc.compat.JFederationExecutionAlreadyExists: federation exists: ExampleFederation
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:163)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federate name in use: sourceFederate
+org.portico.lrc.compat.JFederateAlreadyExecutionMember: federate name in use: sourceFederate
+	at org.portico.bindings.jgroups.LrcConnection.joinFederation(LrcConnection.java:260)
+	at org.portico.lrc.services.federation.handlers.outgoing.JoinFederationHandler.process(JoinFederationHandler.java:92)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.joinFederationExecution(Rti13Ambassador.java:321)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:201)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc.jgroups: Error connecting to channel [ExampleFederation]: failed to start protocol stack
+org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:155)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc: org.jgroups.ChannelException: failed to start protocol stack
+org.portico.lrc.compat.JRTIinternalError: org.jgroups.ChannelException: failed to start protocol stack
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:112)
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:155)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+Caused by: org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	... 8 more
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc.jgroups: Error connecting to channel [ExampleFederation]: failed to start protocol stack
+org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:155)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc: org.jgroups.ChannelException: failed to start protocol stack
+org.portico.lrc.compat.JRTIinternalError: org.jgroups.ChannelException: failed to start protocol stack
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:112)
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:155)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+Caused by: org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	... 8 more
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc.jgroups: Error connecting to channel [ExampleFederation]: failed to start protocol stack
+org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:155)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=/155.69.151.60, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc: org.jgroups.ChannelException: failed to start protocol stack
+org.portico.lrc.compat.JRTIinternalError: org.jgroups.ChannelException: failed to start protocol stack
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:112)
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:155)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+Caused by: org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	... 8 more
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=/155.69.151.60, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc.jgroups: Error connecting to channel [ExampleFederation]: failed to start protocol stack
+org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:155)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc: org.jgroups.ChannelException: failed to start protocol stack
+org.portico.lrc.compat.JRTIinternalError: org.jgroups.ChannelException: failed to start protocol stack
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:112)
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:155)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+Caused by: org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	... 8 more
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc.jgroups: Error connecting to channel [ExampleFederation]: failed to start protocol stack
+org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:155)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc: org.jgroups.ChannelException: failed to start protocol stack
+org.portico.lrc.compat.JRTIinternalError: org.jgroups.ChannelException: failed to start protocol stack
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:112)
+	at org.portico.bindings.jgroups.LrcConnection.createFederation(LrcConnection.java:155)
+	at org.portico.lrc.services.federation.handlers.outgoing.CreateFederationHandler.process(CreateFederationHandler.java:74)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.createFederationExecution(Rti13Ambassador.java:194)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:184)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+Caused by: org.jgroups.ChannelException: failed to start protocol stack
+	at org.jgroups.JChannel.startStack(JChannel.java:1763)
+	at org.jgroups.JChannel.connect(JChannel.java:501)
+	at org.jgroups.JChannel.connect(JChannel.java:459)
+	at org.portico.bindings.jgroups.ChannelWrapper.<init>(ChannelWrapper.java:106)
+	... 8 more
+Caused by: java.lang.Exception: problem creating sockets (bind_addr=localhost/127.0.0.1, mcast_addr=155.69.151.60:20913)
+	at org.jgroups.protocols.UDP.start(UDP.java:218)
+	at org.jgroups.stack.ProtocolStack.startStack(ProtocolStack.java:745)
+	at org.jgroups.JChannel.startStack(JChannel.java:1760)
+	... 11 more
+Caused by: java.net.SocketException: Not a multicast address
+	at java.net.MulticastSocket.joinGroup(MulticastSocket.java:274)
+	at org.jgroups.protocols.UDP.createSockets(UDP.java:377)
+	at org.jgroups.protocols.UDP.start(UDP.java:214)
+	... 13 more
+ERROR [main] portico.lrc: FAILURE Exception encountered while processing incoming message: null
+java.lang.NullPointerException
+	at org.portico.lrc.services.time.data.TimeManager.enableRegulating(TimeManager.java:244)
+	at org.portico.lrc.services.time.handlers.incoming.EnableRegulationIncomingHandler.process(EnableRegulationIncomingHandler.java:129)
+	at org.portico.utils.messaging.MessageChain.process(MessageChain.java:78)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.lrc.LRC.tickProcess(LRC.java:641)
+	at org.portico.lrc.LRC.tickUntilEmpty(LRC.java:469)
+	at org.portico.lrc.LRC.tick(LRC.java:433)
+	at org.portico.impl.hla13.Impl13Helper.tick(Impl13Helper.java:130)
+	at org.portico.impl.hla13.Rti13Ambassador.tick(Rti13Ambassador.java:5781)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:245)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: FAILURE Exception encountered while processing incoming message: null
+java.lang.NullPointerException
+	at org.portico.lrc.services.time.data.TimeManager.enableConstrained(TimeManager.java:310)
+	at org.portico.lrc.services.time.handlers.incoming.EnableConstrainedIncomingHandler.process(EnableConstrainedIncomingHandler.java:64)
+	at org.portico.utils.messaging.MessageChain.process(MessageChain.java:78)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.lrc.LRC.tickProcess(LRC.java:641)
+	at org.portico.lrc.LRC.tickUntilEmpty(LRC.java:469)
+	at org.portico.lrc.LRC.tick(LRC.java:433)
+	at org.portico.impl.hla13.Impl13Helper.tick(Impl13Helper.java:130)
+	at org.portico.impl.hla13.Rti13Ambassador.tick(Rti13Ambassador.java:5781)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:245)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federates still joined: [BaseStationFed4, BaseStationFed3, BaseStationFed0, BaseStationFed2]
+org.portico.lrc.compat.JFederatesCurrentlyJoined: federates still joined: [BaseStationFed4, BaseStationFed3, BaseStationFed0, BaseStationFed2]
+	at org.portico.bindings.jgroups.LrcConnection.destroyFederation(LrcConnection.java:211)
+	at org.portico.lrc.services.federation.handlers.outgoing.DestroyFederationHandler.process(DestroyFederationHandler.java:57)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.destroyFederationExecution(Rti13Ambassador.java:257)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:266)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federates still joined: [BaseStationFed4, BaseStationFed1, BaseStationFed2, BaseStationFed3, BaseStationFed0]
+org.portico.lrc.compat.JFederatesCurrentlyJoined: federates still joined: [BaseStationFed4, BaseStationFed1, BaseStationFed2, BaseStationFed3, BaseStationFed0]
+	at org.portico.bindings.jgroups.LrcConnection.destroyFederation(LrcConnection.java:211)
+	at org.portico.lrc.services.federation.handlers.outgoing.DestroyFederationHandler.process(DestroyFederationHandler.java:57)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.destroyFederationExecution(Rti13Ambassador.java:257)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:266)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federates still joined: [BaseStationFed0, BaseStationFed3, BaseStationFed4, BaseStationFed1, BaseStationFed2]
+org.portico.lrc.compat.JFederatesCurrentlyJoined: federates still joined: [BaseStationFed0, BaseStationFed3, BaseStationFed4, BaseStationFed1, BaseStationFed2]
+	at org.portico.bindings.jgroups.LrcConnection.destroyFederation(LrcConnection.java:211)
+	at org.portico.lrc.services.federation.handlers.outgoing.DestroyFederationHandler.process(DestroyFederationHandler.java:57)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.destroyFederationExecution(Rti13Ambassador.java:257)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:266)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
+ERROR [main] portico.lrc: federates still joined: [BaseStationFed3, BaseStationFed4, BaseStationFed0, BaseStationFed1, BaseStationFed2]
+org.portico.lrc.compat.JFederatesCurrentlyJoined: federates still joined: [BaseStationFed3, BaseStationFed4, BaseStationFed0, BaseStationFed1, BaseStationFed2]
+	at org.portico.bindings.jgroups.LrcConnection.destroyFederation(LrcConnection.java:211)
+	at org.portico.lrc.services.federation.handlers.outgoing.DestroyFederationHandler.process(DestroyFederationHandler.java:57)
+	at org.portico.utils.messaging.MessageSink.process(MessageSink.java:187)
+	at org.portico.impl.hla13.Impl13Helper.processMessage(Impl13Helper.java:123)
+	at org.portico.impl.hla13.Rti13Ambassador.processMessage(Rti13Ambassador.java:5822)
+	at org.portico.impl.hla13.Rti13Ambassador.destroyFederationExecution(Rti13Ambassador.java:257)
+	at simulationassignment.SourceFederate.runFederate(SourceFederate.java:266)
+	at simulationassignment.SourceSimulation.main(SourceSimulation.java:93)
