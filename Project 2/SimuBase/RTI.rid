@@ -136,7 +136,7 @@ portico.loglevel = ERROR
 #        the threshold for this level (down to something like DEBUG or even TRACE). Note that this
 #        will only alter the JGroups logger, not the general Portico logger.
 #        DEFAULT: OFF
-# portico.jgroups.loglevel = OFF
+portico.jgroups.loglevel = OFF
 
 # (3.2) JGroups Response Timeout
 #        Certain operations Portico uses wait for a specific amount of time for a response. The
@@ -152,7 +152,8 @@ portico.loglevel = ERROR
 #        The UDP address the JGroups binding will communicate on.
 #        DEFAULT: 228.10.10.10
 #
-# portico.jgroups.udp.address = 228.10.10.10 
+# portico.jgroups.udp.address = 155.69.151.60
+
 
 # (3.4) JGroups UDP Port
 #        The UDP port the JGroups binding will communicate on.
@@ -172,7 +173,7 @@ portico.loglevel = ERROR
 #        e.g. "192.168.0.10,eth1,127.0.0.1". Default will pick the first configured,
 #        connected interface.
 #
-# portico.jgroups.udp.receiveInterfaces = 
+# portico.jgroups.udp.receiveInterfaces = 155.69.151.60
 
 # (3.7) JGroup UDP Send Interfaces
 #        The interfaces/addresses JGroups will send multicast packets. This should be a
