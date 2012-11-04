@@ -300,12 +300,12 @@ public class SourceFederate {
         /////////////////////////////
         // enable time constrained //
         /////////////////////////////
-        this.rtiamb.enableTimeConstrained();
-
-        // tick until we get the callback
-        while (fedamb.isConstrained == false) {
-            rtiamb.tick();
-        }
+//        this.rtiamb.enableTimeConstrained();
+//
+//        // tick until we get the callback
+//        while (fedamb.isConstrained == false) {
+//            rtiamb.tick();
+//        }
     }
 
     /**

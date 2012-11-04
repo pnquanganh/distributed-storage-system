@@ -23,8 +23,6 @@ import hla.rti.Region;
 import hla.rti.ResignAction;
 import hla.rti.SuppliedAttributes;
 import hla.rti.SuppliedParameters;
-import hla.rti.jlc.EncodingHelpers;
-import hla.rti.jlc.RtiFactoryFactory;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -43,6 +41,9 @@ import org.portico.impl.hla13.types.DoubleTimeInterval;
  */
 public class SourceSimulation {
 
+    static double RoundDouble(double input) {
+        return Math.floor(1000 * input + 0.5) / 1000;
+    }
     
     public static void read_data(PriorityQueue<CallInitEvent> event_list){
         BufferedReader br = null;
@@ -58,9 +59,9 @@ public class SourceSimulation {
                 double event_time = scanner.nextDouble() + 1.0;
                 int station = scanner.nextInt() - 1;
                 double duration = scanner.nextDouble();
-                double speed = scanner.nextDouble() * 1000 / 3600;
+                double speed = RoundDouble(scanner.nextDouble() * 1000 / 3600);
                 
-                double position = r.nextDouble() * 2000.0;
+                double position = RoundDouble(r.nextDouble() * 2000.0);
                 event_list.add(new CallInitEvent(EventTypes.CALL_INITIATION, event_time, speed, station, position, duration));
             }
             br.close();

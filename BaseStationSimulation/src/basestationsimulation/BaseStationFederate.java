@@ -123,7 +123,6 @@ public class BaseStationFederate {
     public int[] free_channels = {10, 10, 10, 10};
     public double current_time;
     public boolean new_event = false;
-    
     public int num_call_init = 0;
     public int num_call_handover = 0;
     public int num_call_handover_from_other_fed = 0;
@@ -182,6 +181,9 @@ public class BaseStationFederate {
         return new DoubleTimeInterval(time);
     }
 
+    private double RoundDouble(double input) {
+        return Math.floor(1000 * input + 0.5) / 1000;
+    }
     ///////////////////////////////////////////////////////////////////////////
     ////////////////////////// Main Simulation Method /////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -257,7 +259,14 @@ public class BaseStationFederate {
                         advanceTime(event_time);
                         log("2. Time Advanced to " + fedamb.federateTime);
                     }
+//                    else if (fedamb.federateTime < event_time) {
+//                        event_list.poll();
+//                        continue;
+//                    }
 
+                    if (!BaseStationSimulation.new_event && fedamb.federateTime < event_time)
+                        continue;
+                    
                     if (BaseStationSimulation.new_event) {
                         entry = event_list.peek();
                         event_time = entry.event_time;
@@ -272,7 +281,7 @@ public class BaseStationFederate {
 
         }
 
-    
+
         System.out.println("Call init: " + num_call_init);
         System.out.println("Call handover: " + num_call_handover);
         System.out.println("Call handover from other feds: " + num_call_handover_from_other_fed);
@@ -285,7 +294,7 @@ public class BaseStationFederate {
         ////////////////////////////////////
         rtiamb.resignFederationExecution(ResignAction.NO_ACTION);
         log("Resigned from Federation");
-       
+
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -331,7 +340,7 @@ public class BaseStationFederate {
      */
     //private void publishAndSubscribe(Region region) throws RTIexception
     private void publishAndSubscribe(Region region) throws RTIexception {
-        
+
         int classHandle = rtiamb.getInteractionClassHandle("InteractionRoot.Call_init");
         int classHandle1 = rtiamb.getInteractionClassHandle("InteractionRoot.Handover");
 
@@ -536,6 +545,11 @@ public class BaseStationFederate {
 
     private void EventHandling(Region region, Events entry, double event_time) throws AssertionError {
 
+        System.out.println("Free channels: " + free_channels[0] + " "
+                + free_channels[1] + " "
+                + free_channels[2] + " "
+                + free_channels[3]);
+
         switch (entry.event_type) {
             case CALL_INITIATION:
                 HandleCallInitEvent(entry, event_time, region);
@@ -552,8 +566,11 @@ public class BaseStationFederate {
     }
 
     private boolean HandleCallInitEvent(Events entry, double event_time, Region region) {
+
         num_call_init++;
         CallInitEvent call_init_event = (CallInitEvent) entry;
+        System.out.println("HandleCallInitEvent " + call_init_event.toString());
+
         int station = call_init_event.station;
         if (free_channels[station % NUM_BASE] == 0) {
             num_blocked_call++;
@@ -563,15 +580,15 @@ public class BaseStationFederate {
         double speed = call_init_event.speed;
         double position = call_init_event.position;
         double duration = call_init_event.duration;
-        if (speed * duration + position < COVER_RANGE) {
-            CallTermEvent call_term_ev = new CallTermEvent(EventTypes.CALL_TERMINATION, event_time + duration, station);
+        if (RoundDouble(speed * duration + position) < COVER_RANGE) {
+            CallTermEvent call_term_ev = new CallTermEvent(EventTypes.CALL_TERMINATION, RoundDouble(event_time + duration), station);
             event_list.add(call_term_ev);
 
         } else {
-            double elapsed_time = (COVER_RANGE - position) / speed;
+            double elapsed_time = RoundDouble((COVER_RANGE - position) / speed);
             int next_station = station + 1;
-            double next_event_time = event_time + elapsed_time;
-            double remaining_duration = duration - elapsed_time;
+            double next_event_time = RoundDouble(event_time + elapsed_time);
+            double remaining_duration = RoundDouble(duration - elapsed_time);
             if (next_station >= (index + 1) * NUM_BASE) {
                 if (index <= NUM_FED - 2) {
                     try {
@@ -594,27 +611,31 @@ public class BaseStationFederate {
     }
 
     private boolean HandleHandoverEvent(Events entry, double event_time, Region region) {
+
         CallHandoverEvent call_hand_event = (CallHandoverEvent) entry;
+        System.out.println("HandleHandoverEvent " + call_hand_event.toString());
+
         int current_station = call_hand_event.current_station;
         int next_station = call_hand_event.next_station;
-        
+
         // Handover from the previous Federate
         if (current_station == -1) {
             num_call_handover_from_other_fed++;
             current_station = index * NUM_BASE - 1;
             next_station = index * NUM_BASE;
         }
-        
+
         // not a handover to next Federate
-        if (next_station < (index + 1) * NUM_BASE)
+        if (next_station < (index + 1) * NUM_BASE) {
             num_call_handover++;
-        
+        }
+
         // free a channel
-        if (current_station >= index * NUM_BASE && 
-                current_station < (index + 1) * NUM_BASE) {
+        if (current_station >= index * NUM_BASE
+                && current_station < (index + 1) * NUM_BASE) {
             free_channels[current_station % NUM_BASE] += 1;
         }
-        
+
         if (next_station >= index * NUM_BASE
                 && next_station < (index + 1) * NUM_BASE) {
             if (free_channels[next_station % NUM_BASE] == 0) {
@@ -623,14 +644,14 @@ public class BaseStationFederate {
             }
             free_channels[next_station % NUM_BASE] -= 1;
         }
-        
+
         double remaining_duration = call_hand_event.remaining_duration;
         double _speed = call_hand_event.speed;
         if (next_station < (index + 1) * NUM_BASE) {
 
-            if (_speed * remaining_duration < COVER_RANGE) {
+            if (RoundDouble(_speed * remaining_duration) < COVER_RANGE) {
                 CallTermEvent call_term_ev = new CallTermEvent(EventTypes.CALL_TERMINATION,
-                        event_time + remaining_duration, next_station);
+                        RoundDouble(event_time + remaining_duration), next_station);
 
                 event_list.add(call_term_ev);
             } else {
@@ -641,21 +662,27 @@ public class BaseStationFederate {
     }
 
     private void HandleCallTermEvent(Events entry) {
+        
         CallTermEvent call_term_event = (CallTermEvent) entry;
+        System.out.println("HandleHandoverEvent " + call_term_event.toString());
         free_channels[call_term_event.station % NUM_BASE] += 1;
     }
 
     private void GenerateNextHandover(double _speed, double event_time, int next_station, Region region, double remaining_duration) {
         // check handover other fed
-        double elapsed_time = COVER_RANGE / _speed;
-        double next_event_time = event_time + elapsed_time;
+        double elapsed_time = RoundDouble(COVER_RANGE / _speed);
+        double next_event_time = RoundDouble(event_time + elapsed_time);
+        double remain_call_time = RoundDouble(remaining_duration - elapsed_time);
         
         if (next_station + 1 >= (index + 1) * NUM_BASE) {
             if (index <= NUM_FED - 2) {
                 try {
                     log("Before send " + fedamb.federateTime);
+                    System.out.println("GenerateNextHandover " + Double.toString(next_event_time) + 
+                            " " + Double.toString(_speed) + " " 
+                            + Double.toString(remain_call_time));
                     // send interaction
-                    sendInteraction(region, next_event_time, _speed, remaining_duration - elapsed_time);
+                    sendInteraction(region, next_event_time, _speed, remain_call_time);
 
                 } catch (RTIexception ex) {
                     Logger.getLogger(BaseStationFederate.class.getName()).log(Level.SEVERE, null, ex);
@@ -667,7 +694,7 @@ public class BaseStationFederate {
                 new CallHandoverEvent(EventTypes.CALL_HANDOVER,
                 next_event_time,
                 _speed, next_station, next_station + 1,
-                remaining_duration - elapsed_time);
+                remain_call_time);
         event_list.add(call_hand_ev);
     }
 }
