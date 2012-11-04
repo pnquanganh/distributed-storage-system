@@ -21,7 +21,7 @@ public class BaseStationSimulation {
     public static void main(String[] args) {
         
         // TODO code application logic here
-        int index = 0;
+        int index = 4;
         
         if (args.length != 0) {
             index = Integer.parseInt(args[0]);

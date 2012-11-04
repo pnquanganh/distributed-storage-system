@@ -33,8 +33,10 @@ public class CallHandoverEvent extends Events{
 
     @Override
     public String toString() {
-        return "CallHandoverEvent{" + "speed=" + speed + ", next_station=" + next_station + ", remaining_duration=" + remaining_duration + '}';
+        return "CallHandoverEvent{" + "speed=" + speed + ", current_station=" + current_station + ", next_station=" + next_station + ", remaining_duration=" + remaining_duration + '}';
     }
+
+    
     
     
 }
