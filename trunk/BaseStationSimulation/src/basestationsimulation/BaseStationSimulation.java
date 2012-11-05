@@ -23,7 +23,7 @@ public class BaseStationSimulation {
         
         // TODO code application logic here
         int index = Integer.parseInt(args[0]);
-        start_timestamp = Double.parseDouble(args[1]);
+        start_timestamp = Double.parseDouble(args[1]) + 1;
         
         
         try {
