@@ -14,6 +14,7 @@ public class BaseStationSimulation {
 
     public static boolean new_event = false;
     public static boolean check = false;
+    public static double start_timestamp = 0;
 
     /**
      * @param args the command line arguments
@@ -21,11 +22,9 @@ public class BaseStationSimulation {
     public static void main(String[] args) {
         
         // TODO code application logic here
-        int index = 4;
+        int index = Integer.parseInt(args[0]);
+        start_timestamp = Double.parseDouble(args[1]);
         
-        if (args.length != 0) {
-            index = Integer.parseInt(args[0]);
-        }
         
         try {
             // run the example federate
