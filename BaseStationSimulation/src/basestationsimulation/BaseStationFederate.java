@@ -567,13 +567,17 @@ public class BaseStationFederate {
 
     private boolean HandleCallInitEvent(Events entry, double event_time, Region region) {
 
-        num_call_init++;
+        if (fedamb.federateTime >= BaseStationSimulation.start_timestamp) {
+            num_call_init++;
+        }
         CallInitEvent call_init_event = (CallInitEvent) entry;
         System.out.println("HandleCallInitEvent " + call_init_event.toString());
 
         int station = call_init_event.station;
         if (free_channels[station % NUM_BASE] == 0) {
-            num_blocked_call++;
+            
+            if (fedamb.federateTime >= BaseStationSimulation.start_timestamp)
+                num_blocked_call++;
             return true; // blocked call
         }
         free_channels[station % NUM_BASE] -= 1;
@@ -620,14 +624,18 @@ public class BaseStationFederate {
 
         // Handover from the previous Federate
         if (current_station == -1) {
-            num_call_handover_from_other_fed++;
+            if (fedamb.federateTime >= BaseStationSimulation.start_timestamp) {
+                num_call_handover_from_other_fed++;
+            }
             current_station = index * NUM_BASE - 1;
             next_station = index * NUM_BASE;
         }
 
         // not a handover to next Federate
         if (next_station < (index + 1) * NUM_BASE) {
-            num_call_handover++;
+            if (fedamb.federateTime >= BaseStationSimulation.start_timestamp) {
+                num_call_handover++;
+            }
         }
 
         // free a channel
@@ -639,7 +647,9 @@ public class BaseStationFederate {
         if (next_station >= index * NUM_BASE
                 && next_station < (index + 1) * NUM_BASE) {
             if (free_channels[next_station % NUM_BASE] == 0) {
-                num_dropped_call++;
+                if (fedamb.federateTime >= BaseStationSimulation.start_timestamp) {
+                    num_dropped_call++;
+                }
                 return true; // dropped call
             }
             free_channels[next_station % NUM_BASE] -= 1;
